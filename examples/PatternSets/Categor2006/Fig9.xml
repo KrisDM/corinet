@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<patternSet xmlns="http://www.corinet.org/namespaces/CORINETSetup" columns="20">
+	<annotation>
+		<documentation>
+			PatternSet from "A feedback model of perceptual learning and categorisation", Visual Cognition 13(2):129-65,2006.
+		</documentation>
+		<documentation>
+			This patternSet contains a representation for the bars of the training patterns of fig. 9a. 
+		</documentation>
+	</annotation>
+    <p><r>1 0 0 1 1 0 0 0 0 0 1 0 1 0 0 0 0 1 0 0</r></p>
+    <p><r>0 0 0 1 0 1 0 0 0 0 1 0 1 0 0 0 0 1 1 0</r></p>
+    <p><r>0 0 0 1 0 0 1 0 0 0 1 0 1 0 0 1 0 1 0 0</r></p>
+    <p><r>0 0 1 1 0 0 0 0 0 1 1 0 1 0 0 0 0 1 0 0</r></p>
+</patternSet>

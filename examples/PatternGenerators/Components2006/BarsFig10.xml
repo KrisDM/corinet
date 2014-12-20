@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patternGenerator[
+	<!ENTITY horComponents SYSTEM "../../PatternSets/Components2006/unequalBarsHor.xml">
+	<!ENTITY verComponents SYSTEM "../../PatternSets/Components2006/unequalBarsVer.xml">
+]>
+<patternGenerator xmlns="http://www.corinet.org/namespaces/CORINETSetup" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup ../../../code/xml/Setup/experimentSetup.xsd" 
+definitionFile="./code/xml/Definition/languageDefinition.xml" patterns="48" location="./examples/PatternGenerators/Components2006/BarsFig10Results.xml">
+	<annotation>
+		<documentation>
+			Task from "Learning image components for object recognition", Journal of Machine Learning Research 7:793-815,2006.
+		</documentation>
+		<documentation>
+			This patternGenerator generates training patterns as used in fig. 10 of the paper.
+			Because the horizontal and vertical components are present with a different probability,
+			a compositeTask is used to insert those horizontal and vertical components independently.
+		</documentation>
+	</annotation>
+	<compositeTask type="insertIndependent" columns="16" rows="16">
+		<insert type="larger" inColumn="0" inRow="0">
+			<task type="set3" columns="16" rows="16">
+				<taskParams>
+					<param name="prob" value="0.125"/>
+				</taskParams>
+				&horComponents;
+			</task>
+			<task type="set3" columns="16" rows="16">
+				<taskParams>
+					<param name="prob" value="0.03125"/>
+				</taskParams>
+				&verComponents;
+			</task>
+		</insert>
+	</compositeTask>
+</patternGenerator>

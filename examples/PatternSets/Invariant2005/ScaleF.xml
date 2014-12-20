@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<patternSet xmlns="http://www.corinet.org/namespaces/CORINETSetup" columns="8" rows="8">
+	<annotation>
+		<documentation>
+			PatternSet from "Learning viewpoint invariant perceptual representation from cluttered images", 
+			IEEE Transactions on Pattern Analysis and Machine Intelligence 27(5):753-761,2005.
+		</documentation>
+		<documentation>
+			Scaled F patterns. Two be used as part of a compositeTask to generate the patterns from fig. 5a.
+		</documentation>
+	</annotation>
+	<p>
+		<r>1 1 1 1 1 1 0 0</r>
+		<r>1 1 1 1 1 1 0 0</r>
+		<r>1 1 0 0 0 0 0 0</r>
+		<r>1 1 0 0 0 0 0 0</r>
+		<r>1 1 1 1 0 0 0 0</r>
+		<r>1 1 1 1 0 0 0 0</r>
+		<r>1 1 0 0 0 0 0 0</r>
+		<r>1 1 0 0 0 0 0 0</r>
+	</p>
+	<p>
+		<r>0 0 0 0 0 0 0 0</r>
+		<r>0 0 0 0 0 0 0 0</r>
+		<r>0 0 0 0 0 0 0 0</r>
+		<r>0 0 0 0 0 0 0 0</r>
+		<r>1 1 1 0 0 0 0 0</r>
+		<r>1 0 0 0 0 0 0 0</r>
+		<r>1 1 0 0 0 0 0 0</r>
+		<r>1 0 0 0 0 0 0 0</r>
+	</p>
+</patternSet>

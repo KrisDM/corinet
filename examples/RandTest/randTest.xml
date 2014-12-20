@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<randTest xmlns="http://www.corinet.org/namespaces/CORINETSetup" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup ./../../code/xml/Setup/experimentSetup.xsd" 
+definitionFile="./code/xml/Definition/languageDefinition.xml" values="100000" location="./examples/RandTest/test1.txt" precision="8">
+	<randGen type="exp1">
+		<param name="mean" value="1"/>
+	</randGen>
+</randTest>

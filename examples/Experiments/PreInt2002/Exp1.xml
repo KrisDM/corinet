@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<experiment xmlns="http://www.corinet.org/namespaces/CORINETSetup" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup ../../../code/xml/Setup/experimentSetup.xsd" 
+definitionFile="./code/xml/Definition/languageDefinition.xml">
+	<annotation>
+		<documentation>
+			Experiment from "Pre-integration lateral inhibition enhances unsupervised learning", Neural Computation 14(9): 2157-79,2002.
+		</documentation>
+		<documentation>
+			This file implements Experiment 1 from the paper: Figure 2 on page 6 and the data described on
+			page 5, 3rd paragraph. Results are written to 2 different XML files and can be plotted in a format 
+			similar to the one used in the paper by running the Matlab script 'Exp1.m' in this same directory.
+		</documentation>
+		<documentation>
+			Technical issues: two simple networks consisting of one block with a single integrationSite in which
+			weights are being learned. Most parameters and elements are defined in targetDefaults.
+			Each network is simulated in its own execution, because the number of iterations needed
+			for each is not the same. Each network is simulated for multiple runs. Two of the event handlers
+			show the use of conditions. Data recorded with event handlers is written to two separate XML files.		
+		</documentation>
+	</annotation>
+	<inputSection>
+		<inputBlock id="I0">
+			<inputIndices>0 1 2 3 4 5</inputIndices>
+		</inputBlock>
+	</inputSection>
+	<networkSection>
+		<network inputs="6" id="N0" type="discrete">
+			<block nodes="6" id="B0" outputBlock="true">
+				<integrationSite type="conj1" inputRefs="I0" id="D0">
+					<siteParams>
+						<param name="negLearningRate" value="1"></param>
+					</siteParams>
+				</integrationSite>
+			</block>
+		</network>
+		<network inputs="6" id="N1" type="discrete">
+			<block nodes="6" id="B1" outputBlock="true">
+				<integrationSite type="conj1" inputRefs="I0" id="D1">
+					<siteParams>
+						<param name="negLearningRate" value="0.015625"></param>
+					</siteParams>
+				</integrationSite>
+			</block>
+		</network>
+	</networkSection>
+	<taskSection>
+		<task id="T0" columns="6" type="set1">
+			<patternSet columns="6">
+				<p><r>1 0 0 0 0 0</r></p>
+				<p><r>1 1 0 0 0 0</r></p>
+				<p><r>1 1 1 0 0 0</r></p>
+				<p><r>0 0 1 1 0 0</r></p>
+				<p><r>0 0 0 1 1 0</r></p>
+				<p><r>0 0 0 1 1 1</r></p>
+			</patternSet>
+		</task>
+		<task id="T1" columns="6" type="set1">
+			<patternSet columns="6">
+				<p><r>1 1 1 1 0 0 </r></p>
+				<p><r>1 1 1 1 1 0 </r></p>
+				<p><r>1 1 1 1 1 1 </r></p>
+				<p><r>1 1 1 1 0 1 </r></p>
+				<p><r>0 1 1 1 1 0 </r></p>
+				<p><r>1 0 1 0 1 1 </r></p>
+			</patternSet>
+		</task>
+	</taskSection>
+	<executionSection xsi:type="engineV1">
+		<execution networks="N0" runs="25">
+			<sequence>
+				<part phase="train" tasks="T0" iterations="200" id="EP0"/>
+				<part phase="test" tasks="T0" iterations="6" id="EP1"/>
+				<part phase="test" tasks="T1" iterations="6" id="EP2"/>
+			</sequence>
+		</execution>
+		<execution networks="N1" runs="25">
+			<sequence>
+				<part phase="train" tasks="T0" iterations="1000" id="EP3"/>
+				<part phase="test" tasks="T0" iterations="6" id="EP4"/>
+				<part phase="test" tasks="T1" iterations="6" id="EP5"/>
+			</sequence>
+		</execution>
+	</executionSection>
+	<defaultSection>
+		<targetDefaults>
+			<default targets="D0 D1">
+				<initialisation type="value"/>
+			</default>
+			<default targets="D0 D1">
+				<normalisation type="normNode"/>
+			</default>
+			<default targets="D0 D1">
+				<siteParams>
+					<param name="alphaStep" value="0.25"></param>
+					<param name="alphaMax" value="4.0"></param>
+					<param name="learningRate" value="1.0"></param>
+				</siteParams>
+			</default>
+			<default targets="B0 B1">
+				<outputFunction type="addSites">
+					<attenuation type="clip"/>
+					<noiseFunction type="additive">
+						<randGen type="uniDoublePart">
+							<param name="low" value="0.0"/>
+							<param name="high" value="0.001"/>
+							<param name="prob" value="0.6666"/>
+						</randGen>
+					</noiseFunction>
+				</outputFunction>
+			</default>
+		</targetDefaults>
+	</defaultSection>
+	<eventSection xsi:type="eventModelV1">
+		<report type="xml" location="Exp1ResultsFig2.xml" id="FIG2"/>
+		<report type="xml" location="Exp1ResultsPage5.xml" id="PAGE5"/>
+		<!--record the weights for all runs and all networks, generating the results described on page 5-->
+		<event eventTime="endIteration" parts="EP0 EP3">
+			<condition variable="iteration" type="multiple" values="5"/>
+			<record targets="D0 D1" type="weights" report="PAGE5"/>
+		</event>
+		<!--record the network response of N0 for an arbitrary run (generating data for Figure 2)-->
+		<event eventTime="endIteration" parts="EP1 EP2">
+			<condition type="equals" values="11" variable="run"/>
+			<record type="netInput" targets="N0" report="FIG2"/>
+			<record type="netOutput" targets="N0" report="FIG2"/>
+		</event>
+		<event eventTime="endPart" parts="EP2">
+			<condition type="equals" values="11" variable="run"/>
+			<record type="weights" targets="D0" report="FIG2"/>
+		</event>
+	</eventSection>
+</experiment>

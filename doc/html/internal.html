@@ -1,0 +1,247 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CORINET Internals</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+<body>
+<h1>How Does corinet Work?</h1>
+The internal structure of <tt>corinet</tt> is based on five fundamental concepts: 
+<ul>
+  <li> <a href="./internal.html#networks">networks</a>: the neural networks under 
+    simulation </li>
+  <li> <a href="./internal.html#tasks">tasks</a> generate the input to the networks 
+  </li>
+  <li> <a href="./internal.html#events">events</a> allow to record or modify the 
+    state of networks and tasks </li>
+  <li> the <a href="./internal.html#engine">execution engine</a> determines how 
+    networks, tasks and events are executed</li>
+  <li>the <a href="./internal.html#client">client</a> handles xml files, creates 
+    and starts the execution engine</li>
+</ul>
+<p>This document can be read as an introduction to the terminology used internally 
+  and in the experiment setup files, and as a glossary.</p>
+<a name="networks"><h2>Networks</h2>
+</a> Networks in <tt>corinet</tt> contain a number of <i>external inputs</i> and 
+<i>nodes</i>. 
+<h3>External Inputs</h3>
+<p>The state of an external input is characterised by a single, real <i>input 
+  value</i>. All external inputs are of the same type. External inputs are grouped 
+  together into <em>input blocks</em>.</p>
+<h3>Nodes</h3>
+The state of a node is characterised by a single <i>output value</i>, one or more 
+<i>integration values</i> and a set of <i>synaptic weights</i>. Nodes within a 
+network can be of different types. The type of a node determines how input signals 
+are <i>integrated</i>, how synaptic weights are adjusted during <i>learning</i>, 
+or how integration values are combined into a single output value. Nodes are not 
+simulated in isolation, but grouped together into <i>blocks</i>. 
+<h3>Block</h3>
+<p>Nodes of the same type and with the same sources of input are grouped into 
+  blocks. Blocks can be regarded as the atomic unit of simulation; however, blocks 
+  are <i>functionally</i> divided into different components: each block contains 
+  one or more <i>integration sites</i> and a single <i>output function</i>.</p>
+<h3>Integration Site</h3>
+<p>An integration site simulates the dendritic or input part of all nodes within 
+  a block. Integration sites receive input from input blocks or from the output 
+  of other blocks in the network. An integration site contains a set of weights 
+  - one for each synapse or input/node combination - and a set of integration 
+  values or results - one for each node in the block. The type of the integration 
+  site determines how integration values are calculated in the <i>integration 
+  rule<em>, </em></i>and how weights are adjusted in the <em>learning rule</em>. 
+  Furthermore, each integration site contains a <i>weight initialisation function</i> 
+  and a <i>weight normalisation function</i>, which are independent of the type 
+  of integration site. A block can contain more than one integration site, which 
+  can be regarded as independent dendritic compartments for all the nodes in the 
+  block. </p>
+<h3>Weight Initialisation</h3>
+<p>Weights can be initialised at the start of each simulation with a weight initialisation 
+  function. It is performed only once at the start of each network simulation. 
+</p>
+<h3>Weight Normalisation</h3>
+<p>After each execution of the learning rule, weights are normalised with the 
+  weight normalisation function. The normalisation function is also executed once 
+  immediately after the weight initilisation.</p>
+<h3>Output Function</h3>
+<p>A block can contain more than one integration site, each producing a separate 
+  integration value for all nodes within the block. For each node, the integration 
+  values are combined into a single output value in the output function. Output 
+  functions may also contain an <em>attenuation function</em> and a <em>noise 
+  function, </em>whose types are independent from the type of the output function.</p>
+<h3>Attenuation</h3>
+<p>After the output value has been calculated from individual integration values, 
+  an additional operation can be applied to the output value, e.g. clipping to 
+  a certain interval.</p>
+<h3>Noise Function</h3>
+<p>After the attenuation, noise can be applied to the output values in a separate 
+  operation.</p>
+<h3>Random Generators</h3>
+<p>Initialisation and noise functions may contain a random number generator to 
+  randomise their operation. The random number generator can be seeded with a 
+  positive integer to ensure repeatable behaviour across multiple simulations 
+  of the same experiment. If not seeded explicitly, it is seeded with a random 
+  number based on the system clock.</p>
+<h3>Network structure</h3>
+<p>The overall connection pattern of input blocks and block output to integration 
+  site input determines the hierarchical <em>structure</em> of the network.</p>
+<a name="tasks"><h2>Tasks</h2>
+</a> 
+<p>Tasks generate input for networks, i.e. values for the external inputs of networks. 
+  Patterns are two-dimensional matrices or one-dimensional row vectors (i.e. containing 
+  a single row). The size is determined by the number of columns and rows within 
+  the pattern. A pattern may be defined as a two-dimensional matrix, but is eventually 
+  mapped to the one-dimensional network input as in <tt>Matlab</tt> or <tt>Fortran</tt>: 
+  starting at the top left corner of the matrix, moving first down the column 
+  and subsequently from left to right. Tasks may contain attenuation and noise 
+  functions, exactly as in output functions. There are two main types of tasks: 
+  <em>simple </em>and <em>composite </em>tasks.</p>
+<h3>Simple Task</h3>
+<p>Simple tasks (or <em>tasks</em> in short) either generate patterns internally, 
+  on-the-fly, or have patterns specified explicitly in a <em>pattern set </em>or 
+  a <em>data source</em>.</p>
+<h3>Pattern Set</h3>
+<p>A pattern set is a collection of explicitly specified patterns, in a format 
+  defined by the <tt>corinet</tt> markup language.</p>
+<h3>Data Source</h3>
+<p>A data source forms a connection to patterns in alternative, non-xml formats. 
+  It allows to use legacy databases of patterns within <tt>corinet</tt> without 
+  having to convert them to a pattern set. (note: there are currently no data 
+  sources defined)</p>
+<h3>Composite Task</h3>
+<p>A composite task generates patterns by <em>inserting</em> subpatterns generated 
+  by simple tasks into a larger pattern. If the composite task is two-dimensional, 
+  the subpatterns are inserted normally in the two-dimensional pattern. If the 
+  composite task is a one-dimensional row vector, any two-dimensional subpatterns 
+  are inserted in the same <tt>Matlab-like manner as described above. </tt></p>
+<h3>Insert</h3>
+<p>An insert groups one or more simple tasks together whose patterns are inserted 
+  in the same manner and in the same location in the pattern of the composite 
+  task.</p>
+<h3>Store</h3>
+<p>Simple and composite tasks alike have the ability to store generated patterns 
+  for reuse. When the specified number of patterns has been generated, further 
+  training cycles through the previously generated patterns.</p>
+<h3>Seed</h3>
+<p>Tasks may contain one or more internal random number generator to add randomisation 
+  to how patterns are generated. These random generators can be seeded with a 
+  positive integer to lead to repeatable behaviour across multiple simulations 
+  of the same experiment. If not seeded explicitly, they are seeded with different 
+  random numbers based on the system clock.</p>
+<a name="events"> 
+<h2>Events</h2>
+<p>Events are additional elements that may perform operations such as recording 
+  weights or node values in a network. They are only created and executed when 
+  specified explicitly and therefore do not slow down the simulation of the network 
+  when absent. The timing or <em>event time </em>of when exactly events perform 
+  their operations is tightly linked to the type of execution engine, and therefor 
+  explained in the next section. Events follow a <em>condition-action</em> model, 
+  i.e., when a set of conditions is fulfilled, a set of actions is performed. 
+  There are three main types of actions: actions to <em>record</em> the state 
+  of networks and tasks, actions to <em>modify </em>the state of networks, and 
+  actions to <em>modify simulation parameters </em>of elements within network, 
+  task or execution engine.</p>
+<h3>Condition</h3>
+<p>A condition compares the value of a variable to a list of values. If the comparison 
+  is successful for one of the values in the list, the actions in the event are 
+  executed. If an event contains more than one condition, all of them need to 
+  pass the comparison before the actions are executed.</p>
+<h3>Record</h3>
+<p>A record action records weight values, integration values, output values of 
+  a block or a network etc., and passes these values on to a <em>report</em> element 
+  so that they can be written to a file.</p>
+<h3>Report</h3>
+<p>A report element writes results from a network simulation to a file, either 
+  in plain text format or in a format defined by the <tt>corinet</tt> markup language.</p>
+<h3>Modify</h3>
+<p>A modify action allows to change weight values, integration values, network 
+  input etc. during the simulation. This can be used to e.g. apply a bias to single 
+  nodes within the network.</p>
+<h3>Modify Parameters</h3>
+<p>A modifyParam action allows to change one of the operational parameters of 
+  one of the other elements during the simulation. It allows to change the behaviour 
+  of a network or task while the simulation is running.</p>
+<h3>Operation</h3>
+<p>An operation specifies which operation to perform on values in a modify or 
+  modifyParam action.</p>
+</a><a name="engine"> 
+<h2>The Execution Engine</h2>
+</a> 
+<p>The execution engine is the part of the program that creates and executes networks, 
+  tasks and events. In a single experiment, the engine executes one or more <em>executions.</em></p>
+<h3>Execution</h3>
+<p>An execution is a self-contained part of an experiment. It simulates one or 
+  more networks side-by-side or in parallel, i.e. all networks in an execution, 
+  in each iteration, receive the same pattern as input. An execution defines the 
+  execution structure of a single trial or <em>cycle</em> in its main <em>sequence</em>, 
+  and contains constructs that allow repetition of trials (<em>runs </em>and <em>loops</em>)<em>.</em></p>
+<h3>Sequence</h3>
+<p>The main sequence defines the structure of a single trial. It consists of one 
+  or more execution <em>parts</em> or nested subsequences<em>.</em> During a trial, 
+  the execution performs all parts and sequences in the order of their specification 
+  in the setup file. A sequence can be <em>repeated</em>, i.e. the engine cycles 
+  multiple times through all parts and sequences that make up the sequence. Subsequences 
+  of the main sequence cannot contain further sequences, only parts.</p>
+<h3>Part</h3>
+<p>A part is a part of the execution in which the networks consistently receive 
+  input from the same tasks. Each part consists of a number of iterations. One 
+  iteration consists of a number of steps: first, each task within the part <em>generates</em> 
+  a single pattern. This is followed by a <em>reset</em> of the state of the networks. 
+  Each network type has its own way of performing the reset, but in general a 
+  reset changes input and node values in such a way to erase the end-state of 
+  the previous iteration. After the reset, the patterns generated by the tasks 
+  are inserted into the external inputs of the network. If more than one task 
+  is defined in the part, their patterns are inserted from left to right into 
+  the network input. The networks then perform a number of integration steps, 
+  output calculations and learning steps. An integration step is a single calculation 
+  of the integration values in each integration site; an output calculation calculates 
+  the output from the different integration sites within each of the blocks; a 
+  learning step adjusts the weights in the integration site. An output calculation 
+  follows immediately after integration values have been calculated for all blocks 
+  within the network. How learning steps follow integration steps is determined 
+  by the type of the network and the type of its constituting integration sites. 
+  For instance, a network could first perform 50 integration/output calculation 
+  steps, followed by a single learning step; or it could interleave each integration/output 
+  step with a learning step. The iteration finishes when certain criteria (number 
+  of integration steps, time simulated etc) are fulfilled. Because the main sequence 
+  or subsequences may be repeated multiple times, a part can be <em>entered</em> 
+  many times during a single trial.</p>
+<p>The execution of events is tied to certain <em>event times</em> within a part: 
+  at the beginning or end of the part, at the beginning or end of each iteration, 
+  before or after patterns are generated, before or after reset, before or after 
+  setting the network input, before or after an integration step, after the output 
+  calculation, before or after the learning step. Furthermore, extra conditions 
+  on the time at which an event may perform its actions may be specified (e.g. 
+  every 5 iterations). </p>
+<p>Finally, the <em>phase</em> of a part may cause certain steps within an iteration 
+  to be skipped: e.g., a <em>test</em> phase skips learning steps, and a <em>generate</em> 
+  phase only generates task patterns (this is useful in conjunction with the <em>store</em> 
+  feature of tasks). The <em>train</em> phase performs all steps of the iteration 
+  described above.</p>
+<h3>Run</h3>
+<p>A run is a single trial of an execution as specified by its main sequence. 
+  Networks and tasks are re-initialised at the start of each run, but random generators 
+  are not reseeded. This means that performing an execution over multiple trials 
+  or runs allows to assess the influence of e.g. the order in which training patterns 
+  are presented.</p>
+<h3>Loop</h3>
+<p>Loops allow to run an execution over multiple network or task parameter values. 
+  For instance, an execution may specify that a network needs to be simulated 
+  for three different learning rates. Multiple loops may be defined within an 
+  execution: the higher loops are the outermost loops, lower loops are inner loops. 
+  A single set of parameters for the networks and tasks within the execution is 
+  called a <em>configuration</em>. A configuration of networks and tasks may be 
+  executed for multiple runs. A combination of a configuration and a run is called 
+  a <em>cycle</em>. For instance, if an execution contains a loop over three learning 
+  rate values, then it contains 3 configurations. If each configuration is simulated 
+  for 10 runs, then the execution consists of 30 cycles. If an execution contains 
+  a loop over three learning rates, and another loop over 4 noise levels in the 
+  task, then the execution contains 12 configurations. It is currently not possible 
+  to run loops over <em>structural </em>parameters, such as network and task sizes.</p>
+<p><a name="client" id="client"></a></p>
+<h2>The Client</h2>
+<p>The client handles <tt>corinet</tt> markup language input files, sets up all 
+  the information for the execution engine and then creates and calls the execution 
+  engine.</p>
+</body>
+
+	
+

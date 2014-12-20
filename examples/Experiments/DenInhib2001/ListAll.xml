@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<experimentList xmlns="http://www.corinet.org/namespaces/CORINETSetup/List"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup/List ../../../code/xml/Setup/experimentList.xsd">
+	<file location="./examples/Experiments/DenInhib2001/Exp1.xml"></file>
+	<file location="./examples/Experiments/DenInhib2001/Exp2.xml"></file>
+	<file location="./examples/Experiments/DenInhib2001/Exp3.xml"></file>
+	<file location="./examples/Experiments/DenInhib2001/Exp4.xml"></file>
+</experimentList>

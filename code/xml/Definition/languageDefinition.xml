@@ -1,0 +1,711 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageDefinition xmlns="http://www.corinet.org/namespaces/CORINETDefinition" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETDefinition languageDefinition.xsd">
+	<annotation>
+		<documentation>
+			This file describes admissible types and other constraints on the validity of setup files.
+			When parameters are specified as optional without a default value, the default value is 0.
+		</documentation>
+		<documentation>
+			The type names used in this file need to correspond to the type names used for registering 
+			concrete classes in the C++ program code. The numbering of param elements here in this file 
+			needs to be the same as the numbering of parameters in the constructors in the program code.
+		</documentation>
+	</annotation>
+	<randGenSection>
+		<!--============================================================================-->
+		<annotation>
+			<documentation>
+				Admissible types of randGen elements. 
+			</documentation>
+		</annotation>
+		<!--============================================================================-->
+		<randGen type="uniDouble">
+			<annotation>
+				<documentation>
+					A uniform random double in interval [low,high[.
+				</documentation>
+			</annotation>
+			<param name="low" use="required"></param>
+			<param name="high" use="required"></param>
+		</randGen>
+		<randGen type="uniDoublePart">
+			<annotation>
+				<documentation>
+					With probability "prob" a uniform random double in interval [low,high[, otherwise 0.
+					This distribution was used in the PreInt2002 paper to add noise to node output values,
+					but has been replaced by randGen "log1" in more recent papers.
+				</documentation>
+			</annotation>
+			<param name="low" use="required"/>
+			<param name="high" use="required"/>
+			<param name="prob" use="required"/>
+		</randGen>
+		<randGen type="normal">
+			<annotation>
+				<documentation>
+					Normal distribution with mean "mean" and standard deviation "std".
+					"Mean" and "std" must both be positive.
+				</documentation>
+			</annotation>
+			<param name="mean" use="required"></param>
+			<param name="std" use="required"></param>
+		</randGen>
+		<randGen type="exp1">
+			<annotation>
+				<documentation>
+					Exponential distribution with mean "mean", whiich must be positive.
+				</documentation>
+			</annotation>
+			<param name="mean" use="required"></param>
+		</randGen>
+		<randGen type="log1">
+			<annotation>
+				<documentation>
+					Logarithmic distribution in interval [0,high[. High must be positive.
+					Used as multiplicative noise for the output values of neurons in recent papers.
+				</documentation>
+			</annotation>
+			<param name="high" use="required"></param>
+		</randGen>
+	</randGenSection>
+	<attenuationSection>
+		<!--============================================================================-->
+		<annotation>
+			<documentation>
+				Attenuation of output values.
+			</documentation>
+		</annotation>
+		<!--============================================================================-->
+		<attenuation type="clipLow">
+			<annotation>
+				<documentation>
+					Values smaller than "low" are clipped to "low". 
+				</documentation>
+			</annotation>
+			<param name="low" use="optional" default="0.0"></param>
+		</attenuation>
+		<attenuation type="clip">
+			<annotation>
+				<documentation>
+					Values are clipped to the interval [low,high].
+				</documentation>
+			</annotation>
+			<param name="low" use="optional" default="0.0"></param>
+			<param name="high" use="optional" default="1.0"></param>
+		</attenuation>
+		<attenuation type="time1" state="true">
+			<annotation>
+				<documentation>
+					Following operations are performed:
+						y = y/(1+C)
+						clip to interval [low,high]
+						C = tauC*y +(1-tauC)*C
+					Please note that this attenuation function has a state
+				</documentation>
+			</annotation>
+			<param name="low" use="optional" default="0.0"></param>
+			<param name="high" use="optional" default="1.0"></param>
+			<param name="tauC" use="required"></param>
+		</attenuation>
+	</attenuationSection>
+	<noiseFunctionSection>
+		<noiseFunction type="additive" randGen="required">
+			<annotation>
+				<documentation>
+					Noise added to output value 
+						y = y + noise
+				</documentation>
+			</annotation>
+		</noiseFunction>
+		<noiseFunction type="multiplicative" randGen="required">
+			<annotation>
+				<documentation>
+					Noise modulates output 
+						y = y*(1 + noise).
+				</documentation>
+			</annotation>
+		</noiseFunction>
+		<noiseFunction type="additiveClip" randGen="required">
+			<annotation>
+				<documentation>
+					Noise added to output
+						y = y + noise
+					Final value clipped to [low,high]
+				</documentation>
+			</annotation>
+			<param name="low" use="optional" default="0.0"></param>
+			<param name="high" use="optional" default="1.0"></param>
+		</noiseFunction>
+		<noiseFunction type="multiplicativeClip" randGen="required">
+			<annotation>
+				<documentation>
+					Noise modulates output 
+						y = y*(1 + noise)
+					Final value clipped to [low,high]
+				</documentation>
+			</annotation>
+			<param name="low" use="optional" default="0.0"></param>
+			<param name="high" use="optional" default="1.0"></param>
+		</noiseFunction>
+	</noiseFunctionSection>
+	<initialisationSection>
+		<!--============================================================================-->
+		<annotation>
+			<documentation>
+				Initialisation functions for weight values of integrationSite.
+				The randGen attribute specifies whether a randGen element is irequired or not.
+				The w attribute specifies whether a weight vector is required or not.
+			</documentation>
+		</annotation>
+		<!--============================================================================-->
+		<initialisation type="explicit" randGen="optional" w="required">
+			<annotation>
+				<documentation>
+					Weight values are specified explicitly.
+				</documentation>
+			</annotation>
+		</initialisation>
+		<initialisation type="value" randGen="optional" w="prohibited">
+			<annotation>
+				<documentation>
+					Weight values are all initialised to specified value.
+				</documentation>
+			</annotation>
+			<param name="value" use="optional" default="1.0"/>
+		</initialisation>
+		<initialisation type="diagonal" randGen="prohibited" w="prohibited">
+			<annotation>
+				<documentation>
+					Weight matrix is initialised to a diagonal matrix (with "value" on the main diagonal).
+				</documentation>
+			</annotation>
+			<param name="value" use="optional" default="1.0"/>
+		</initialisation>
+		<initialisation type="random" randGen="required" w="prohibited">
+			<annotation>
+				<documentation>
+					Weight values are initialised to random values supplied by randGen element.
+				</documentation>
+			</annotation>
+		</initialisation>
+		<initialisation type="inputSize" randGen="optional" w="prohibited">
+			<annotation>
+				<documentation>
+					Weight values are initialised to 1/m.
+				</documentation>
+			</annotation>
+		</initialisation>
+		<initialisation type="nodeSize" randGen="optional" w="prohibited">
+			<annotation>
+				<documentation>
+					Weight values are initialised to 1/n.
+				</documentation>
+			</annotation>
+		</initialisation>
+	</initialisationSection>
+	<normalisationSection>
+		<!--============================================================================-->
+		<annotation>
+			<documentation>
+				Normalisation functions for weight values of integrationSite.
+			</documentation>
+		</annotation>
+		<!--============================================================================-->
+		<normalisation type="normNone">
+			<annotation>
+				<documentation>
+					Weights are not rescaled after learning or initialisation.
+				</documentation>
+			</annotation>
+		</normalisation>
+		<normalisation type="normNode">
+			<annotation>
+				<documentation>
+					Sum of weights arriving at each node is rescaled.
+					For positive weights:
+						if sum(w+) is larger than posConstrain, sum(w+) is rescaled to posNorm.
+						No individual positive weight is allowed to grow larger than posMax.
+					For negative weights:
+						if sum(w-) is smaller than negConstrain, sum(w-) is rescaled to negNorm
+						No individual negative weight is allowed to grow smaller than negMax.
+					With the default parameter values, the behaviour defaults to the normalisation
+					employed in most papers: sum of positive weights is normalised to 1, sum of 
+					negative weights is only normalised to -1 if it is smaller than -1. 
+					posNorm and posConstrain must be positive, negNorm and negConstrain negative.
+				</documentation>
+			</annotation>
+			<param name="posNorm" use="optional" default="1.0"></param>
+			<param name="posConstrain" use="optional" default="0.0"></param>
+			<param name="posMax" use="optional" default="1.0"></param>
+			<param name="negNorm" use="optional" default="-1.0"></param>
+			<param name="negConstrain" use="optional" default="-1.0"></param>
+			<param name="negMax" use="optional" default="-1.0"></param>
+		</normalisation>
+		<normalisation type="normInput">
+			<annotation>
+				<documentation>
+					Sum of weights originating from each input is rescaled.
+					For positive weights:
+						if sum(w+) is larger than posConstrain, sum(w+) is rescaled to posNorm.
+						No individual positive weight is allowed to grow larger than posMax.
+					For negative weights:
+						if sum(w-) is smaller than negConstrain, sum(w-) is rescaled to negNorm.
+						No individual negative weight is allowed to grow smaller than negMax.
+					With the default parameter values, the behaviour defaults to the normalisation
+					employed in most papers: sum of positive weights is normalised to 1, sum of 
+					negative weights is only normalised to -1 if it is smaller than -1. 
+					posNorm and posConstrain must be positive, negNorm and negConstrain negative.
+				</documentation>
+			</annotation>
+			<param name="posNorm" use="optional" default="1.0"></param>
+			<param name="posConstrain" use="optional" default="0.0"></param>
+			<param name="posMax" use="optional" default="1.0"></param>
+			<param name="negNorm" use="optional" default="-1.0"></param>
+			<param name="negConstrain" use="optional" default="-1.0"></param>
+			<param name="negMax" use="optional" default="-1.0"></param>
+		</normalisation>
+	</normalisationSection>
+	<outputFunctionSection>
+		<!--============================================================================-->
+		<annotation>
+			<documentation>
+				Admissible types of outputFunction elements.
+				Attribute "numSites" specifies a list of numbers of integrationSites that this outputFunction 
+				can handle. If numSites = 0 then it can handle any number of integrationSites.
+			</documentation>
+		</annotation>
+		<!--============================================================================-->
+		<outputFunction type="addSites" numSites="0">
+			<annotation>
+				<documentation>
+					output = sum(sites)
+				</documentation>
+			</annotation>
+		</outputFunction>
+		<outputFunction type="maxSites" numSites="0">
+			<annotation>
+				<documentation>
+					output = max(sites)
+				</documentation>
+			</annotation>
+		</outputFunction>
+		<outputFunction type="modulate1" numSites="2">
+			<annotation>
+				<documentation>
+					Apical dendrite modulates integration values of basal dendrite:
+						output = basal* (1 + a*apical)		
+				</documentation>
+			</annotation>
+			<param name="a" use="optional" default="1.0"/>
+		</outputFunction>
+	</outputFunctionSection>
+	<locationSection>
+		<!--============================================================================-->
+		<annotation>
+			<documentation>
+				Admissible names for the dendritic location of integrationSite elements. If the "location" attribute
+				in the "integrationSite" element is not specified, then integrationSites are assigned the location
+				within a block corresponding to the order of their appearance in the setup file. For example,
+				if a block contains two integrationSites without location attribute, than the first one is 
+				assumed to be the basal, the second one is assumed to be the apical.
+			</documentation>
+		</annotation>
+		<!--============================================================================-->
+		<location type="basal" nr="0"></location>
+		<location type="apical" nr="1"></location>
+		<!--============================================================================-->
+	</locationSection>
+	<integrationSiteSection>
+		<annotation>
+			<documentation>
+				Admissible types of integrationSite elements. The type of integrationSite determines the 
+				integration rule and  learning rule. Some integrationSite elements have an empty learning rule;
+				they can be used as base classes for integrationSites with the same integration rule but
+				different learning rules.
+			</documentation>
+		</annotation>
+		<!--============================================================================-->
+		<integrationSite type="addInt1">
+			<annotation>
+				<documentation>
+					Simple additive integration.
+						y = w*x
+					No learning.
+				</documentation>
+			</annotation>
+		</integrationSite>
+		<integrationSite type="maxInt1">
+			<annotation>
+				<documentation>
+					Max integration as for disjunctive integration sites. 
+					See e.g. paper Invariant2005.
+					No learning.
+				</documentation>
+			</annotation>
+		</integrationSite>
+		<integrationSite type="compInt1">
+			<annotation>
+				<documentation>
+					Competitive integration as in  pre-integration lateral inhibition. 
+					See e.g. paper PreInt2002.
+					No learning.
+					A non-zero value for parameter "finishIntegration" runs the integration until alphaMax is reached,
+					a zero value for that parameter breaks off integration when converged.
+				</documentation>
+			</annotation>
+			<param name="alphaStep" use="required"></param>
+			<param name="alphaMax" use="required"></param>
+			<param name="completeIntegration" use="optional" default="0.0"></param>
+		</integrationSite>
+		<integrationSite type="disj1">
+			<annotation>
+				<documentation>
+					Derived from maxInt1. Learning rule as described in Invariant2005.
+					If trace is larger than 0, then a trace of previously presented patterns is used for adjusting weights;
+					if trace is 0, then the current input pattern is used for adjusting weights.
+				</documentation>
+			</annotation>
+			<param name="learningRate" use="required"></param>
+			<param name="trace" use="optional" default="0.0"></param>
+		</integrationSite>
+		<integrationSite type="disj2">
+			<annotation>
+				<documentation>
+					Derived from maxInt1. Learning rule as described in Invariant2005.
+					The input pattern from the previous iteration is used for adjusting weights
+				</documentation>
+			</annotation>
+			<param name="learningRate" use="required"></param>
+		</integrationSite>
+		<integrationSite type="conj1">
+			<annotation>
+				<documentation>
+					Derived from compInt1. Learning rule as described in PreInt2002.
+				</documentation>
+			</annotation>
+			<param name="alphaStep" use="required"></param>
+			<param name="alphaMax" use="required"></param>
+			<param name="completeIntegration" use="optional" default="0.0"></param>
+			<param name="learningRate" use="required"></param>
+			<param name="negLearningRate" use="required"></param> 
+		</integrationSite>
+		<integrationSite type="conj2">
+			<annotation>
+				<documentation>
+					Derived from compInt1. Learning rule as described in Invariant2005.
+				</documentation>
+			</annotation>
+			<param name="alphaStep" use="required"></param>
+			<param name="alphaMax" use="required"></param>
+			<param name="completeIntegration" use="optional" default="0.0"></param>
+			<param name="learningRate" use="required"></param>
+			<param name="negLearningRate" use="required"></param>
+		</integrationSite>
+		<integrationSite type="conj3">
+			<annotation>
+				<documentation>
+					Derived from compInt1. Learning rule as described in Categor2006.
+					The learning rule is the same as conj2, but 0 weights are clamped to 0.
+					Negative weights are not allowed.
+				</documentation>
+			</annotation>
+			<param name="alphaStep" use="required"></param>
+			<param name="alphaMax" use="required"></param>
+			<param name="completeIntegration" use="optional" default="0.0"></param>
+			<param name="learningRate" use="required"></param>
+		</integrationSite>
+	</integrationSiteSection>
+	<blockSection>
+		<!--============================================================================-->
+		<annotation>
+			<documentation>
+				Admissible types of blocks. If the type of a block is not specified, it defaults to "blockNormal".
+			</documentation>
+		</annotation>
+		<!--============================================================================-->
+		<block type="blockNormal">
+			<annotation>
+				<documentation>
+					Default choice for type of blocks. 
+					Just a container for an outputFunction and one or more integrationSites.
+				</documentation>
+			</annotation>
+		</block>
+		<block type="constructive">
+			<annotation>
+				<documentation>
+					Implementing constructive version of learning algorithms.
+					Learning starts with a number of nodes that is smaller than the total number
+					of nodes in the block. If all nodes in the learning pool have had weight
+					adjustments, a new, uncommitted node is made available.
+				</documentation>
+			</annotation>
+			<param name="startNodes" use="optional" default="2"></param>
+		</block>
+	</blockSection>
+	<networkSection>
+		<!--============================================================================-->
+		<annotation>
+			<documentation>
+				Admissible types of networks. The type of a network determines how it is executed.
+			</documentation>
+		</annotation>
+		<!--============================================================================-->
+		<network type="discrete">
+			<annotation>
+				<documentation>
+					This network is executed in discrete iterations:each iteration, after the entire state
+					of the network is reset, a pattern is presented as input. Integration steps are then performed 
+					until integration has converged to a steady state for each individual integrationSite  
+					(this is especially important for iterative integration such as compInt1). 
+					Parameter "pathLength" determines how many extra integration steps are performed 
+					after convergence, to allow all converged integration values to propagate through all 
+					layers or regions of the network. 
+				</documentation>
+			</annotation>
+			<param name="pathLength" use="optional"></param>
+		</network>
+		<network type="dynamic">
+			<annotation>
+				<documentation>
+					The execution of this network is centered around a concept of time: an "iteration" still corresponds
+					to the presentation of a single input pattern, but the number of integration steps performed during 
+					an iteration depends on the amount of time the pattern is presented to the network and the 
+					number of integration steps performed per time unit (the "sampling" time of the simulation).
+					Parameter "stepsPerTime" determines the sampling time. Two additional parameters specified
+					in execution elements further determine the dynamical behaviour of the network: parameter 
+					"timePerPattern" determines how long an individual pattern is presented to the network; parameter
+					"zeroTime" determines the reset behaviour of this network: if it has a positive value, the all-0 pattern
+					is presented for this amount of time to the network and normal integration and learning is performed.
+					If it is negative, the entire state of the network is cleared, as for discrete networks.
+					CURRENTLY, NO SUITABLE LEARNING RULES ARE DEFINED FOR DYNAMIC NETWORKS.
+				</documentation>
+			</annotation>
+			<param name="stepsPerTime" use="required"></param>
+		</network>
+	</networkSection>
+	<dataSourceSection>
+		<!--============================================================================-->
+		<annotation>
+			<documentation>
+				Admissible types of external datasources.
+				CURRENTLY, NO DATASOURCES ARE DEFINED.
+			</documentation>
+		</annotation>
+		<!--============================================================================-->
+	</dataSourceSection>
+	<insertSection>
+		<!--============================================================================-->
+		<annotation>
+			<documentation>
+				Admissible types of inserts, determining how simple tasks are inserted into composite tasks.
+			</documentation>
+		</annotation>
+		<!--============================================================================-->
+		<insert type="overwrite">
+			<annotation>
+				<documentation>
+					The pattern generated by the enclosed simple task is inserted in the composite task by
+					overwriting the values in the composite task.
+				</documentation>
+			</annotation>
+		</insert>
+		<insert type="larger">
+			<annotation>
+				<documentation>
+					The pattern generated by the enclosed simple task is compared to the values in
+					the composite task: if larger, values are inserted.
+				</documentation>
+			</annotation>
+		</insert>
+		<insert type="addPixelValues">
+			<annotation>
+				<documentation>
+					The pixel values of the pattern generated by the enclosed simple task are added
+					to the pixel values in the composite task.
+				</documentation>
+			</annotation>
+		</insert>
+	</insertSection>
+	<taskSection>
+		<!--============================================================================-->
+		<annotation>
+			<documentation>
+				Admissible types of simple tasks. 
+				Attribute patternSet specifies whether patternSets or dataSources are required or not.
+				Parameter 'on' for each task allows to set the final input
+				strength of the generated pattern (i.e. all pixel values are multiplied by 'on').
+			</documentation>
+		</annotation>
+		<!--============================================================================-->
+		<task type="set1" patternSet="required">
+			<annotation>
+				<documentation>
+					Each iteration, a pattern from the set is inserted with probability "prob".
+					With the default of prob=1.0, this results in choosing a pattern from the patternSet.
+					This task uses sampling without replacement.
+				</documentation>
+			</annotation>
+			<param name="on" use="optional" default="1.0"></param>
+			<param name="prob" use="optional" default="1.0"></param>
+		</task>
+		<task type="set2"  patternSet="required">
+			<annotation>
+				<documentation>
+					Inserting a pattern from the set is conditional on the past: if it occurred in iteration x, it will also occur in iteration x+1 with 
+					probability "probSame". If it didn't occur in iteration x, it will not occur in iteration x+1 with probability "probSame".
+					The starting state is "no insertation".
+				</documentation>
+			</annotation>
+			<param name="on" use="optional" default="1.0"></param>
+			<param name="probSame" use="required"></param>
+		</task>
+		<task type="set3"  patternSet="required">
+			<annotation>
+				<documentation>
+					Each iteration, each pattern from the set is inserted with probability "prob".
+					With prob=1.0, this results in choosing all patterns from the patternSet.
+				</documentation>
+			</annotation>
+			<param name="on" use="optional" default="1.0"></param>
+			<param name="prob" use="required"></param>
+		</task>
+		<task type="addExtraBits1" patternSet="required">
+			<annotation>
+				<documentation>
+					Each iteration, a pattern from the set is inserted and a number of extra bits is added.
+					These extra bits can be seen as a distortion of the original patterns.
+				</documentation>
+			</annotation>
+			<param name="on" use="optional" default="1.0"></param>
+			<param name="numBits" use="required" default="1.0"></param>
+		</task>
+		<task type="bits1" patternSet="prohibited">
+			<annotation>
+				<documentation>
+					Simple task for testing the response of a network to all patterns consisting of a given number of bits.
+					The number of bits is determined by the "columns" attribute. 
+				</documentation>
+			</annotation>
+			<param name="on" use="optional" default="1.0"></param>
+		</task>
+		<task type="bits2" patternSet="prohibited">
+			<annotation>
+				<documentation>
+					Simple consisting of a single 1 in different locations, starting left the moving to right.
+					For example, for length 3: 100 010 001 are generated in turn.
+					The number of locations is determined by the "columns" attribute. 
+				</documentation>
+			</annotation>
+			<param name="on" use="optional" default="1.0"></param>
+		</task>
+		<task type="bars1" patternSet="prohibited">
+			<annotation>
+				<documentation>
+					The standard bars problem from PreInt2002 paper: in a grid of rows*columns, individual bars are selected
+					independently with probabilities horProb and verProb for horizontal and vertical bars, respectively.
+				</documentation>
+			</annotation>
+			<param name="on" use="optional" default="1.0"></param>
+			<param name="horProb" use="required"></param>
+			<param name="verProb" use="required"></param>
+		</task>
+		<task type="bars2" patternSet="prohibited">
+			<annotation>
+				<documentation>
+					Same as before, but horizontal and vertical bars cannot co-occur 
+					(50-50% chance for horizonal or vertical bars)
+				</documentation>
+			</annotation>
+			<param name="on" use="optional" default="1.0"></param>
+			<param name="horProb" use="required"></param>
+			<param name="verProb" use="required"></param>
+		</task>
+		<task type="bars3" patternSet="prohibited">
+			<annotation>
+				<documentation>
+					A fixed number of bars per pattern.
+				</documentation>
+			</annotation>
+			<param name="on" use="optional" default="1.0"></param>
+			<param name="numBars" use="required"></param>
+		</task>
+		<task type="bars4" patternSet="prohibited">
+			<annotation>
+				<documentation>
+					Bars problem from Invariant2005 paper. Each image contains one randomly chosen bar in one 
+					of the alowed orientations. Determining which orientation is dependent on the past: it stays the
+					same with probability probSame. With probability probTwo, a second bar of the same orientation
+					is present. Bars can occur in 2 orientations (horizontal-vertical) or in 4 orientations (hor-ver-diagonal).
+				</documentation>
+			</annotation>
+			<param name="on" use="optional" default="1.0"></param>
+			<param name="numOrientations" use="required"></param>
+			<param name="probSame" use="required"></param>
+			<param name="probTwo" use="optional"></param>
+		</task>
+		<task type="bars5" patternSet="prohibited">
+			<annotation>
+				<documentation>
+					Bars problem from Invariant2005 paper. Each image can contain an arbitrary number of bars, one per orientation.
+					At each iteration, each orientation can be changed from present to absent (or vice versa) with probability probSame. 
+					With probability probTwo, a second bar in the same orientation is present.
+					Bars can occur in 2 orientations (horizontal-vertical) or in 4 orientations (hor-ver-diagonal).
+				</documentation>
+			</annotation>
+			<param name="on" use="optional" default="1.0"></param>
+			<param name="numOrientations" use="required"></param>
+			<param name="probSame" use="required"></param>
+			<param name="probTwo" use="optional"></param>
+		</task>
+	</taskSection>
+	<compositeTaskSection>
+		<!--============================================================================-->
+		<annotation>
+			<documentation>
+				Admissible types of compositeTasks.
+			</documentation>
+		</annotation>
+		<compositeTask type="insertIndependent">
+			<annotation>
+				<documentation>
+					A pattern from each subtask is generated independently and inserted into the larger task. 
+				</documentation>
+			</annotation>
+			<param name="on" use="optional" default="1.0"/>
+		</compositeTask>
+		<!--============================================================================-->
+	</compositeTaskSection>
+	<executionSection>
+		<!--============================================================================-->
+		<annotation>
+			<documentation>
+				For each network type defined in the networkSection, a corresponding part element with the 
+				same type name needs to be specified here. It defines how execution parameters
+				are interpreted by a specific network type.
+			</documentation>
+		</annotation>
+		<!--============================================================================-->
+		<part type="discrete">
+			<annotation>
+				<documentation>
+					For discrete networks, execution parameters are ignored.
+				</documentation>
+			</annotation>
+			<param name="timePerPattern" use="ignored"/>
+			<param name="zeroTime" use="ignored"/>
+		</part>
+		<part type="dynamic">
+			<annotation>
+				<documentation>
+					Dynamic networks have two additional execution parameters.
+					See the dynamic network documentation above for how an explanation.
+				</documentation>
+			</annotation>
+			<param name="timePerPattern" use="required"/>
+			<param name="zeroTime" use="optional" default="0.0"/>
+		</part>
+	</executionSection>
+</languageDefinition>

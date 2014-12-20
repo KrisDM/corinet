@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<patternSet xmlns="http://www.corinet.org/namespaces/CORINETSetup" columns="8" rows="8">
+	<annotation>
+		<documentation>
+			PatternSet from "A feedback model of visual attention", Journal of Cognitive Neuroscience 16(2):219-37,2004.
+		</documentation>
+		<documentation>
+			This is the testing set of the experiments described in sect. 2.3, used to generate the responses of figs. 11, 12, 13 and 14.
+		</documentation>
+	</annotation>
+	<!--patterns used in Figure 11-->
+	<p>
+		<r>1 1 1 1 1 1 1 1</r>
+		<r>0 0 0 0 0 0 0 0</r>
+		<r>0 0 0 0 0 0 0 0</r>
+		<r>0 0 0 0 0 0 0 0</r>
+		<r>0 0 0 0 0 0 0 0</r>
+		<r>0 0 0 0 0 0 0 0</r>
+		<r>0 0 0 0 0 0 0 0</r>
+		<r>1 1 1 1 1 1 1 1</r>
+	</p>
+	<p>
+		<r>0 0 1 0 0 0 0 0</r>
+		<r>0 0 1 0 0 0 0 0</r>
+		<r>0 0 1 0 1 1 1 1</r>
+		<r>0 0 1 0 0 0 0 0</r>
+		<r>0 0 0 0 1 0 0 0</r>
+		<r>0 0 0 0 1 0 0 0</r>
+		<r>0 0 0 0 1 0 0 0</r>
+		<r>1 1 1 1 1 0 0 0</r>
+	</p>
+	<!--pattern used in Figure 12-->
+	<p>
+		<r>1 1 1 1 1 1 1 1</r>
+		<r>0 0 1 0 0 0 0 0</r>
+		<r>0 0 1 0 1 1 1 1</r>
+		<r>0 0 1 0 0 0 0 0</r>
+		<r>1 0 0 0 1 0 0 0</r>
+		<r>1 0 0 0 1 0 0 0</r>
+		<r>1 0 0 0 1 0 0 0</r>
+		<r>1 1 1 1 1 1 1 1</r>
+	</p>
+	<!--pattern used in Figure 13-->
+	<p>
+		<r>1 1 1 1 1 1 1 1</r>
+		<r>0 0 0 0 0 0 0 0</r>
+		<r>0 0 0 0 0 0 0 0</r>
+		<r>0 0 0 0 0 0 0 0</r>
+		<r>1 0 0 0 0 0 0 0</r>
+		<r>1 0 0 0 0 0 0 0</r>
+		<r>0 0 0 0 0 0 0 0</r>
+		<r>1 0 1 1 1 1 1 1</r>
+	</p>
+	<!--patterns used in Figure 14-->
+	<p>
+		<r>1 1 1 1 1 1 1 1</r>
+		<r>0 0 0 0 0 0 0 0</r>
+		<r>0 0 0 0 0 0 0 0</r>
+		<r>0 0 0 0 0 0 0 0</r>
+		<r>1 1 1 1 0 0 0 0</r>
+		<r>1 1 1 1 0 0 0 0</r>
+		<r>1 1 1 1 0 0 0 0</r>
+		<r>1 1 1 1 1 1 1 1</r>
+	</p>
+	<p>
+		 <r>1 0 0 0 0 0 0 1</r> 
+		 <r>1 0 0 0 0 0 0 1</r>
+		 <r>1 0 0 0 0 0 0 1</r>
+		 <r>1 0 0 0 0 0 0 1</r>
+		 <r>1 1 1 1 0 0 0 1</r>
+		 <r>1 1 1 1 0 0 0 1</r>
+		 <r>1 1 1 1 0 0 0 1</r>
+		 <r>1 1 1 1 0 0 0 1</r>
+	</p>
+</patternSet>

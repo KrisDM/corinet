@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.corinet.org/namespaces/CORINETResults" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.corinet.org/namespaces/CORINETResults" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="results">
+		<xs:annotation>
+			<xs:documentation>Schema specifying the structure of a results file.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+				<xs:element name="execution" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="network" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="values" minOccurs="0" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="cycle" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="v" type="values" maxOccurs="unbounded"/>
+															</xs:sequence>
+															<xs:attribute name="config" type="xs:nonNegativeInteger" use="required"/>
+															<xs:attribute name="run" type="xs:nonNegativeInteger" use="required"/>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+												<xs:attribute name="type" use="required">
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:enumeration value="netState"/>
+															<xs:enumeration value="netInput"/>
+															<xs:enumeration value="netOutput"/>
+															<xs:enumeration value="netIO"/>
+															<xs:enumeration value="blockOutput"/>
+															<xs:enumeration value="integrationInput"/>
+															<xs:enumeration value="integrationValues"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="id" type="xs:string" use="required"/>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="weights" minOccurs="0" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="cycle" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="w" type="weightMatrix" maxOccurs="unbounded"/>
+															</xs:sequence>
+															<xs:attribute name="config" type="xs:nonNegativeInteger" use="required"/>
+															<xs:attribute name="run" type="xs:nonNegativeInteger" use="required"/>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+												<xs:attribute name="id" type="xs:string" use="required"/>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="synapses" minOccurs="0" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="cycle" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="v" type="synapseValues"/>
+															</xs:sequence>
+															<xs:attribute name="config" type="xs:nonNegativeInteger" use="required"/>
+															<xs:attribute name="run" type="xs:nonNegativeInteger" use="required"/>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+												<xs:attribute name="id" type="xs:string" use="required"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="id" type="xs:string" use="required"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="task" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="cycle" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:choice>
+													<xs:element name="p" type="rowPattern" maxOccurs="unbounded"/>
+												</xs:choice>
+												<xs:attribute name="config" type="xs:nonNegativeInteger" use="required"/>
+												<xs:attribute name="run" type="xs:nonNegativeInteger" use="required"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="id" type="xs:string" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="doubles">
+		<xs:annotation>
+			<xs:documentation>List of double</xs:documentation>
+		</xs:annotation>
+		<xs:list itemType="xs:double"/>
+	</xs:simpleType>
+	<xs:complexType name="weightMatrix">
+		<xs:annotation>
+			<xs:documentation>Weight values for an integration site within a block</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="n" type="doubles" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Defined for each node...</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="i" type="xs:nonNegativeInteger" use="required"/>
+		<xs:attribute name="s" type="xs:nonNegativeInteger" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="values">
+		<xs:annotation>
+			<xs:documentation>Activation values for integration site,  block or network</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="doubles">
+				<xs:attribute name="i" type="xs:nonNegativeInteger" use="required"/>
+				<xs:attribute name="s" type="xs:nonNegativeInteger" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="rowPattern">
+		<xs:annotation>
+			<xs:documentation>Holds 2D pattern used as input to one or more networks, ordered by rows</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="r" type="doubles" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="i" type="xs:nonNegativeInteger" use="required"/>
+		<xs:attribute name="s" type="xs:nonNegativeInteger" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="synapseValues">
+		<xs:annotation>
+			<xs:documentation>Holds activation values per synapse, for e.g. pre-integration lateral inhibition</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="n" type="doubles" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Defined for each node...</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="i" type="xs:nonNegativeInteger" use="required"/>
+		<xs:attribute name="s" type="xs:nonNegativeInteger" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="annotationType">
+		<xs:annotation>
+			<xs:documentation>Allows to add documentation and other information</xs:documentation>
+		</xs:annotation>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="appinfo">
+				<xs:complexType mixed="true">
+					<xs:sequence>
+						<xs:any namespace="##any" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:attribute name="source" type="xs:anyURI" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="documentation">
+				<xs:complexType mixed="true">
+					<xs:sequence>
+						<xs:any namespace="##any" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:attribute name="source" type="xs:anyURI" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+		<xs:attribute name="id" type="xs:ID" use="optional"/>
+	</xs:complexType>
+</xs:schema>

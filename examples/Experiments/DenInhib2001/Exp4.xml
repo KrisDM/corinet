@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<experiment xmlns="http://www.corinet.org/namespaces/CORINETSetup"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup ../../../code/xml/Setup/experimentSetup.xsd"
+definitionFile="./code/xml/Definition/languageDefinition.xml">
+	<annotation>
+		<documentation>
+			Experiment from "Dendritic Inhibition Enhances Neural Coding Properties", Cerebral Cortex 11(12): 1144-9,2001.
+		</documentation>
+		<documentation>
+			This file implements Experiment 4 from the paper, Figure 5 on page 6.
+			Results are written to XML file and can be plotted in a format similar to the one used in the paper
+			by running the Matlab script 'Exp4.m' in this same directory.
+		</documentation>
+		<documentation>
+			Technical issues: simple network consisting of one block with a single integrationSite.
+			All elements (parameters, outputFunction etc.) are defined locally (no use of default elements).
+			Patternset is defined internally in task (no use of entity declaration).
+			Example of the use of "modify" event handlers to bias the competition during its early stages.
+		</documentation>
+	</annotation>
+	<inputSection>
+		<inputBlock id="I0">
+			<inputIndices>0 1 2 3</inputIndices>
+		</inputBlock>
+	</inputSection>
+	<networkSection>
+		<network inputs="4" id="N0" type="discrete">
+			<block nodes="4" id="B0" outputBlock="true">
+				<integrationSite type="compInt1" id="D0" inputRefs="I0">
+					<siteParams>
+						<param name="alphaStep" value="0.25"></param>
+						<param name="alphaMax" value="10"></param>
+					</siteParams>
+					<initialisation type="explicit">
+						<w>
+							<n>1 0 1 0</n>
+							<n>0 1 1 0</n>
+							<n>1 0 0 1</n>
+							<n>0 1 0 1</n>
+						</w>
+					</initialisation>
+					<normalisation type="normNode"/>
+				</integrationSite>
+				<outputFunction type="addSites"/>
+			</block>
+		</network>
+	</networkSection>
+	<taskSection>
+		<task id="T0" columns="4" type="set1">
+			<patternSet columns="4">
+				<p><r>1 0 1 0</r></p>
+				<p><r>1 0 0 1</r></p>
+				<p><r>0 1 1 0</r></p>
+				<p><r>0 1 0 1</r></p>
+				<p><r>1 1 1 1</r></p>
+			</patternSet>
+		</task>
+	</taskSection>
+	<executionSection xsi:type="engineV1">
+		<execution networks="N0">
+			<sequence>
+				<part phase="test" tasks="T0" iterations="5" id="EP0"/>
+				<part phase="test" tasks="T0" iterations="5" id="EP1"/>
+			</sequence>
+		</execution>
+	</executionSection>
+	<eventSection xsi:type="eventModelV1">
+		<report type="xml" location="./examples/Experiments/DenInhib2001/Exp4Results.xml" id="R1"/>
+		<event eventTime="endIteration" parts="EP0 EP1">
+			<record type="netInput" targets="N0" report="R1"/>
+			<record type="netOutput" targets="N0" report="R1"/>
+		</event>
+		<event eventTime="endPart" parts="EP0">
+			<record type="weights" targets="D0" report="R1"/>
+		</event>
+		<event eventTime="afterOutput" parts="EP1">
+			<condition type="equals" values="0 1 2 3" variable="integration"/>
+			<modify targets="B0" nodeIndices="0" type="blockOutput">
+				<operation values="0.1" type="add"/>
+			</modify>
+		</event>
+	</eventSection>
+</experiment>
+

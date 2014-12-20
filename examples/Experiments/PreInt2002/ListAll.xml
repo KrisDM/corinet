@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<experimentList xmlns="http://www.corinet.org/namespaces/CORINETSetup/List"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup/List ../../../code/xml/Setup/experimentList.xsd">
+	<file location="./examples/Experiments/PreInt2002/Exp1.xml"></file>
+	<file location="./examples/Experiments/PreInt2002/BarsFig34.xml"></file>
+	<file location="./examples/Experiments/PreInt2002/BarsFig56xml"></file>
+	<file location="./examples/Experiments/PreInt2002/BarsFootnote3.xml"></file>
+	<file location="./examples/Experiments/PreInt2002/BarsFig78.xml"></file>
+</experimentList>

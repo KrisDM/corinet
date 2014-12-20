@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE experiment[
+	<!ENTITY typeDefaults SYSTEM "typeDefaults.xml">
+	<!ENTITY trainSet SYSTEM "../../PatternSets/Attention2004/FamiliarityTrain.xml">
+	<!ENTITY testSet SYSTEM "../../PatternSets/Attention2004/FamiliarityTest.xml">
+]>
+<experiment xmlns="http://www.corinet.org/namespaces/CORINETSetup" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup ../../../code/xml/Setup/experimentSetup.xsd"
+definitionFile="./code/xml/Definition/languageDefinition.xml">
+	<annotation>
+		<documentation>
+			Experiment from "A feedback model of visual attention", Journal of Cognitive Neuroscience 16(2):219-37,2004.
+		</documentation>
+		<documentation>
+			This file sets up the network as explained in sect. 2.3 (fig. 10a); it generates the results for fig. 11, 12, 13 and 14.
+		</documentation>
+		<documentation>
+			Technical issues: two layer network, four blocks in layer 1 and a single block in layer 2. The nodes in layer 1 have 
+			two integrationSites: a basal site receiving the stimulus input, and an apical site receiving feedback from layer 2.
+			The apical site is of type 'conj1', but with alphaMax and alphaStep set to 0 to avoid pre-integration inhibition.
+			The 8*8 input image is divided into four quadrants; 3 different ways of grouping inputs can be seen in the inputSection.
+			---------------------------------------------------------------------------------------------------------------------------------------------------
+			Most network elements and the patternSets in the tasks are specified in external files and included with entity declarations.
+			A few items are specified as targetDefault, thereby overriding the equivalent typeDefault.
+			---------------------------------------------------------------------------------------------------------------------------------------------------
+			The executionSection shows the use of multiple parts in the main sequence; these parts test the network response
+			to all patterns before training, then perform the training, and finally test the network response after training.
+		</documentation>
+	</annotation>
+	<inputSection>
+		<inputBlock id="IQ1"><!--upper left quadrant of 8*8 input-->
+			<inputRange begin="0" step="1" end="3"/>
+			<inputRange begin="8" step="1" end="11"/>
+			<inputRange begin="16" step="1" end="19"/>
+			<inputRange begin="24" step="1" end="27"/>
+		</inputBlock>
+		<inputBlock id="IQ2"><!--lower left quadrant of 8*8 input-->
+			<inputRange begin="4" step="1" end="7"/>
+			<inputRange begin="12" step="1" end="15"/>
+			<inputRange begin="20" step="1" end="23"/>
+			<inputRange begin="28" step="1" end="31"/>
+		</inputBlock>
+		<inputBlock id="IQ3"><!--upper right quadrant of 8*8 input-->
+			<inputIndices>32 33 34 35</inputIndices>
+			<inputIndices>40 41 42 43</inputIndices>
+			<inputIndices>48 49 50 51</inputIndices>
+			<inputIndices>56 57 58 59</inputIndices>
+		</inputBlock>
+		<inputBlock id="IQ4"><!--lower right quadrant of 8*8 input-->
+			<inputIndices>36 37 38 39 44 45 46 47 52 53 54 55 60 61 62 63</inputIndices>
+		</inputBlock>
+	</inputSection>
+	<networkSection>
+		<network type="discrete" inputs="64" id="N0">
+			<block nodes="8" id="L1Q1">
+				<integrationSite inputRefs="IQ1" type="compInt1" location="basal" id="D1B"/>
+				<integrationSite inputRefs="L2" type="conj1" location="apical" id="D1A"/>
+			</block>
+			<block nodes="8" id="L1Q2">
+				<integrationSite inputRefs="IQ2" type="compInt1" location="basal" id="D2B"/>
+				<integrationSite inputRefs="L2" type="conj1" location="apical" id="D2A"/>
+			</block>
+			<block nodes="8" id="L1Q3">
+				<integrationSite inputRefs="IQ3" type="compInt1" location="basal" id="D3B"/>
+				<integrationSite inputRefs="L2" type="conj1" location="apical" id="D3A"/>
+			</block>
+			<block nodes="8" id="L1Q4">
+				<integrationSite inputRefs="IQ4" type="compInt1" location="basal" id="D4B"/>
+				<integrationSite inputRefs="L2" type="conj1" location="apical" id="D4A"/>
+			</block>
+			<block nodes="5" id="L2" outputBlock="true">
+				<integrationSite inputRefs="L1Q1 L1Q2 L1Q3 L1Q4" type="conj1" location="basal" id="D5"/>
+			</block>
+		</network>
+	</networkSection>
+	<taskSection>
+		<task type="set1" columns="8" rows="8" id="T0">
+			&trainSet;
+		</task>
+		<task type="set1" columns="8" rows="8" id="T1">
+			&testSet;
+		</task>
+	</taskSection>
+	<executionSection xsi:type="engineV1">
+		<execution networks="N0">
+			<sequence>
+				<part phase="test" tasks="T1" iterations="6" id="BEFORE"/><!--network response to test patterns before training-->
+				<part phase="train" random="false" tasks="T0" iterations="100" id="TRAIN"/><!--perform the training-->
+				<part phase="test" tasks="T1" iterations="6" id="AFTER"/><!--network response to test patterns after training-->
+			</sequence>
+		</execution>
+	</executionSection>
+	<defaultSection>
+		&typeDefaults;
+		<targetDefaults>
+			<default targets="D1A D2A D3A D4A">
+				<siteParams>
+					<param name="alphaStep" value="0.0"/>
+					<param name="alphaMax" value="0.0"/>
+				</siteParams>
+			</default>
+			<default targets="D1B D2B D3B D4B">
+				<initialisation type="explicit">
+					<w>
+						<n>0.25 0.25 0.25 0.25 0 0 0 0 0 0 0 0 0 0 0 0</n>
+						<n>0 0 0 0 0.25 0.25 0.25 0.25 0 0 0 0 0 0 0 0</n>
+						<n>0 0 0 0 0 0 0 0 0.25 0.25 0.25 0.25 0 0 0 0</n>
+						<n>0 0 0 0 0 0 0 0 0 0 0 0 0.25 0.25 0.25 0.25</n>
+						<n>0.25 0 0 0 0.25 0 0 0 0.25 0 0 0 0.25 0 0 0</n>
+						<n>0 0.25 0 0 0 0.25 0 0 0 0.25 0 0 0 0.25 0 0</n>
+						<n>0 0 0.25 0 0 0 0.25 0 0 0 0.25 0 0 0 0.25 0</n>
+						<n>0 0 0 0.25 0 0 0 0.25 0 0 0 0.25 0 0 0 0.25</n>
+					</w>
+				</initialisation>
+			</default>
+		</targetDefaults>
+	</defaultSection>
+	<eventSection xsi:type="eventModelV1">
+		<report type="xml" location="./examples/Experiments/Attention2004/Exp4Results.xml" id="R1"/>
+		<event eventTime="afterOutput" parts="BEFORE AFTER">
+			<!--record activities of lower left quadrant in layer 1, and of layer 2 (for the insets in figs 11 and 12)-->
+			<record targets="L1Q2 L2" type="blockOutput" report="R1"/> 
+		</event>
+		<event eventTime="endPart" parts="TRAIN">
+			<record type="weights" report="R1" targets="D5"/>
+		</event>
+	</eventSection>
+</experiment>

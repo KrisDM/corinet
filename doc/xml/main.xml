@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book  version="5.0" xml:lang="en" xmlns="http://docbook.org/ns/docbook" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude"
+xsi:schemaLocation="http://docbook.org/ns/docbook ../../tools/docbook/xsd/docbook.xsd http://www.w3.org/1999/xlink ../../tools/docbook/xsd/xlink.xsd">
+	<info>
+		<title>Corinet Documentation</title>
+		<author>
+			<personname>
+				<firstname>Kris</firstname>
+				<surname>De Meyer</surname>
+			</personname>
+		</author>
+		<copyright>
+			<year>2009</year>
+			<holder>K. De Meyer</holder>
+		</copyright>
+	</info>
+	<xi:include href="UserGuide.xml"/>
+    <xi:include href="Tutorials.xml"/>
+    <xi:include href="Reference.xml"/>
+	<part>
+		<title>User's Guide</title>
+		<chapter >
+			<title>Installation</title>
+			<para>
+			    This section describes how to install <computeroutput>corinet</computeroutput> on your system. 
+			    There is no automated installer but the installation process is quite straightforward and should work 
+			    equally well on different operating systems. <computeroutput>corinet</computeroutput> has so far
+			    been tested on Microsoft Windows, Linux and Apple Mac.
+			</para>
+			<section>
+				<title>Preparing your system for installation</title>
+				<orderedlist>
+					<listitem>
+					    <para>
+						    Make a directory to hold all files for the corinet project.
+						</para>
+					</listitem>
+					<listitem>
+					    <para>
+						    Define an environment variable <computeroutput>CORINETROOT</computeroutput> (in capitals) pointing to this directory.
+						    On Windows, this can be done via "Control Panel/System/Advanced/Environment Variables". 
+						    On Unix-based systems this can be achieved by defining a <computeroutput>setenv</computeroutput> command in a file that is
+						    sourced at the start of your session. Please refer to the help system of your Unix distribution for more information.
+						</para>
+					</listitem>
+					<listitem>
+					    <para>
+						    Make a <computeroutput>$CORINETROOT/bin</computeroutput> directory and add it to your search path. On Windows, this can
+						    be done in "Control Panel/System/Advanced/Environment Variables". On Unix-based systems
+						    it is done similarly to the previous step.
+						</para>
+					</listitem>
+					<listitem>
+					    <para>
+						<computeroutput>corinet</computeroutput> uses the Xerces-C XML parser library (version 2.7.0 or later). Download from 
+						<link xlink:href="http://xerces.apache.org/xerces-c/">The Apache XML Project</link> and follow the build or installation instructions.
+						When the build or installation was successful, do the following:
+						<itemizedlist>
+							<listitem>
+							    <para>
+								    On Windows, copy <computeroutput>xerces-c.lib</computeroutput> and <computeroutput>xerces-c_x_y.dll</computeroutput> to the $CORINETROOT/bin directory. 
+								    <computeroutput>x</computeroutput> and <computeroutput>y</computeroutput> are the version numbers of the Xerces release you are installing (e.g., 2 and 7 
+								    for version 2.7.0). If the .lib file has been created as xerces-c_2.lib be sure to rename it.
+								</para>
+							</listitem>
+							<listitem>
+							    <para>
+								    On Linux, copy <computeroutput>libxerces-c.so.xy.0</computeroutput> to a directory in the <computeroutput>LIB_SEARCH_PATH</computeroutput>, e.g. <computeroutput>/usr/lib</computeroutput>.
+								</para>
+							</listitem>
+							<listitem>
+							    <para>
+								    On other Unix systems requirements are similar: a '<computeroutput>.so</computeroutput>' or '<computeroutput>.sl</computeroutput>' file included in the search path of the dynamic loader.
+								</para>
+							</listitem>
+						</itemizedlist>
+						</para>
+					</listitem>
+					<listitem>
+						<para></para>
+					</listitem>
+				</orderedlist>
+			</section>
+		</chapter>
+		<chapter>
+			<title>Running Corinet</title>
+			<para></para>
+		</chapter>
+		<chapter>
+			<title>Basic Elements of the Simulation</title>
+			<para></para>
+		</chapter>
+		<chapter>
+			<title>Writing Experiment Setup Files</title>
+			<para></para>
+		</chapter>
+		<chapter>
+			<title>Extending Corinet</title>
+			<para></para>
+		</chapter>
+	</part>
+	<part>
+		<title>Reference</title>
+		<chapter>
+			<title>Corinet Markup Language</title>
+			<para></para>
+		</chapter>
+		<chapter>
+			<title>Corinet C++ API for Sandbox Functions</title>
+			<para></para>
+		</chapter>
+		<chapter>
+			<title>Full C++ Documentation</title>
+			<para></para>
+		</chapter>
+	</part>
+	<appendix>
+		<title>Useful Links</title>
+		<para></para>
+	</appendix>
+	<appendix>
+		<title>Examples</title>
+		<para></para>
+	</appendix>
+	<appendix>
+		<title>Tutorial</title>
+		<para></para>
+	</appendix>
+</book>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typeDefaults xmlns="http://www.corinet.org/namespaces/CORINETSetup">
+	<default types="compInt1 conj1">
+		<siteParams>
+			<param name="alphaStep" value="0.1"/>
+			<param name="alphaMax" value="6"/>
+			<param name="completeIntegration" value="1"/>
+		</siteParams>
+	</default>
+	<default types="conj1">
+		<siteParams>
+			<param name="learningRate" value="1"/>
+			<param name="negLearningRate" value="0"/>
+		</siteParams>
+	</default>
+	<default types="conj1">
+		<initialisation type="value"/>
+	</default>
+	<default types="conj1">
+		<normalisation type="normNode"/>
+	</default>
+	<default types="addInt1 compInt1">
+		<normalisation type="normNone"/>
+	</default>
+	<default types="addSites modulate1">
+		<attenuation type="time1"><!--used in outputFunctions-->
+			<param name="tauC" value="0.25"/>
+		</attenuation>
+	</default>
+	<default types="addSites modulate1">
+		<noiseFunction type="multiplicative"><!--used in outputFunctions-->
+			<randGen type="log1">
+				<param name="high" value="0.01"/>
+			</randGen>
+		</noiseFunction>
+	</default>
+	<default numSites="1"><!--outputFunction for blocks with 1 integrationSite-->
+		<outputFunction type="addSites"/><!--uses attenuation and noiseFunction from above-->
+	</default>
+	<default numSites="2"><!--outputFunction for blocks with 2 integrationSites-->
+		<outputFunction type="modulate1"/><!--uses attenuation and noiseFunction from above-->
+	</default>
+</typeDefaults>

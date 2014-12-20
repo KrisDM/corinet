@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.corinet.org/namespaces/CORINETDefinition/Generator" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.corinet.org/namespaces/CORINETDefinition/Generator" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="codeGenerator">
+		<xs:annotation>
+			<xs:documentation>Schema defining C++ code template files.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+				<xs:element name="intro">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="line" type="lineType" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="randGen">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="hFile"/>
+							<xs:element ref="cppFile"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="attenuation">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="hFile"/>
+							<xs:element ref="cppFile"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="noiseFunction">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="hFile"/>
+							<xs:element ref="cppFile"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="initialisation">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="hFile"/>
+							<xs:element ref="cppFile"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="normalisation">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="hFile"/>
+							<xs:element ref="cppFile"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="outputFunction">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="hFile"/>
+							<xs:element ref="cppFile"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="integrationSite">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="hFile"/>
+							<xs:element ref="cppFile"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="block">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="hFile"/>
+							<xs:element ref="cppFile"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="network">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="hFile"/>
+							<xs:element ref="cppFile"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="dataSource">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="hFile"/>
+							<xs:element ref="cppFile"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="insert">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="hFile"/>
+							<xs:element ref="cppFile"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="task">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="hFile"/>
+							<xs:element ref="cppFile"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="compositeTask">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="hFile"/>
+							<xs:element ref="cppFile"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="codeFile" type="xs:anyURI" use="optional"/>
+			<xs:attribute name="location" type="xs:anyURI" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="hFile">
+		<xs:annotation>
+			<xs:documentation>Contains code for .h file</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+				<xs:element name="line" type="lineType" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="cppFile">
+		<xs:annotation>
+			<xs:documentation>Contains code for .cpp file</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+				<xs:element name="line" type="lineType" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="lineType" mixed="true">
+		<xs:annotation>
+			<xs:documentation>One line of C++ code</xs:documentation>
+		</xs:annotation>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="tab" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="insertText" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="type" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="date"/>
+								<xs:enumeration value="fileName"/>
+								<xs:enumeration value="typeName"/>
+								<xs:enumeration value="typeNameUpper"/>
+								<xs:enumeration value="key"/>
+								<xs:enumeration value="params"/>
+								<xs:enumeration value="getParams"/>
+								<xs:enumeration value="setParams"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="annotationType">
+		<xs:annotation>
+			<xs:documentation>Allows to add documentation and other information</xs:documentation>
+		</xs:annotation>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="appinfo">
+				<xs:complexType mixed="true">
+					<xs:sequence>
+						<xs:any namespace="##any" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:attribute name="source" type="xs:anyURI" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="documentation">
+				<xs:complexType mixed="true">
+					<xs:sequence>
+						<xs:any namespace="##any" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:attribute name="source" type="xs:anyURI" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+		<xs:attribute name="id" type="xs:ID" use="optional"/>
+	</xs:complexType>
+</xs:schema>

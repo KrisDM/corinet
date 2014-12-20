@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE experiment[
+	<!ENTITY typeDefaults SYSTEM "typeDefaults.xml">
+	<!ENTITY train SYSTEM "../../PatternSets/Coding2004/Fig10.xml">
+	<!ENTITY test SYSTEM "../../PatternSets/Coding2004/Fig11.xml">
+]>
+<experiment xmlns="http://www.corinet.org/namespaces/CORINETSetup"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup ../../../code/xml/Setup/experimentSetup.xsd"
+definitionFile="./code/xml/Definition/languageDefinition.xml">
+<inputSection>
+	<inputBlock id="I0">
+		<inputRange begin="0" step="1" end="63"/>
+	</inputBlock>
+</inputSection>
+<networkSection>
+	<network type="discrete" inputs="64" id="N0">
+		<netParams>
+			<param name="pathLength" value="2"></param>
+		</netParams>
+		<block nodes="32" id="B0">
+			<integrationSite inputRefs="I0" type="conj2" id="IS0"/>
+		</block>
+		<block nodes="10" id="B1" outputBlock="true">
+			<integrationSite inputRefs="B0" type="conj2" id="IS1"/>
+		</block>
+	</network>
+</networkSection>
+<taskSection>
+	<task type="halfBars1" columns="8" rows="8" id="T0">
+		<taskParams>
+			<param name="horProb" value="0.04"/>
+			<param name="verProb" value="0.04"/>
+		</taskParams>	
+		&train;	
+	</task>
+	<task type="set1" columns="8" rows="8" id="T1">
+		&test;
+	</task>
+</taskSection>
+<executionSection xsi:type="engineV1">
+	<execution networks="N0" runs="10">
+		<sequence>
+			<part phase="train" tasks="T0" iterations="500" id="Fig10"></part>
+			<part phase="test" tasks="T1" iterations="5" id="Fig11"></part>
+		</sequence>
+	</execution>
+</executionSection>
+<defaultSection>
+	&typeDefaults;
+</defaultSection>
+<eventSection xsi:type="eventModelV1">
+	<event eventTime="endIteration" parts="Fig10">
+		<condition variable="iteration" type="multiple" values="10"/>
+		<record targets="IS0 IS1" type="weights">
+			<report type="xml" location="./examples/Results/Coding2004-Fig10.xml"></report>
+		</record>
+	</event>
+	<event eventTime="afterGenerate" parts="Fig10">
+		<condition variable="run" type="equals" values="0"/>
+		<condition variable="iteration" type="lt" values="32"/>
+		<record type="taskPatterns" targets="T0">
+			<report type="xml" location="./examples/Results/Coding2004-Fig10.xml"></report>
+		</record>
+	</event>
+	<event eventTime="endIteration" parts="Fig11">
+		<record targets="B0 B1" type="blockOutput">
+			<report type="xml" location="./examples/Results/Coding2004-Fig11.xml"></report>
+		</record>
+	</event>
+</eventSection>
+</experiment>

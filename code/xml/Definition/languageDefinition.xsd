@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.corinet.org/namespaces/CORINETDefinition" xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+targetNamespace="http://www.corinet.org/namespaces/CORINETDefinition" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="languageDefinition">
+		<xs:annotation>
+			<xs:documentation>Schema defining additional constraints on the CORINET language. These files  provide extra validation information for experiment setup files and can be used to generate new C++ code.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+				<xs:element name="randGenSection">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+							<xs:element name="randGen" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+										<xs:element name="param" type="paramType" minOccurs="0" maxOccurs="unbounded"/>
+									</xs:sequence>
+									<xs:attribute name="type" type="xs:ID" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="attenuationSection">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+							<xs:element name="attenuation" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+										<xs:element name="param" type="paramType" minOccurs="0" maxOccurs="unbounded"/>
+									</xs:sequence>
+									<xs:attribute name="type" type="xs:ID" use="required"/>
+									<xs:attribute name="state" type="xs:boolean" use="optional" default="false"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="noiseFunctionSection">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+							<xs:element name="noiseFunction" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+										<xs:element name="param" type="paramType" minOccurs="0" maxOccurs="unbounded"/>
+									</xs:sequence>
+									<xs:attribute name="type" type="xs:ID" use="required"/>
+									<xs:attribute name="state" type="xs:boolean" use="optional" default="false"/>
+									<xs:attribute name="randGen" use="required">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="required"/>
+												<xs:enumeration value="optional"/>
+												<xs:enumeration value="prohibited"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="initialisationSection">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+							<xs:element name="initialisation" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+										<xs:element name="param" type="paramType" minOccurs="0" maxOccurs="unbounded"/>
+									</xs:sequence>
+									<xs:attribute name="type" type="xs:ID" use="required"/>
+									<xs:attribute name="randGen" use="required">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="required"/>
+												<xs:enumeration value="optional"/>
+												<xs:enumeration value="prohibited"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="w" use="required">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="required"/>
+												<xs:enumeration value="optional"/>
+												<xs:enumeration value="prohibited"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="state" type="xs:boolean" use="optional" default="false"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="normalisationSection">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+							<xs:element name="normalisation" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+										<xs:element name="param" type="paramType" minOccurs="0" maxOccurs="unbounded"/>
+									</xs:sequence>
+									<xs:attribute name="type" type="xs:ID" use="required"/>
+									<xs:attribute name="state" type="xs:boolean" use="optional" default="false"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="outputFunctionSection">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+							<xs:element name="outputFunction" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+										<xs:element name="param" type="paramType" minOccurs="0" maxOccurs="unbounded"/>
+									</xs:sequence>
+									<xs:attribute name="type" type="xs:ID" use="required"/>
+									<xs:attribute name="numSites" use="required">
+										<xs:simpleType>
+											<xs:list itemType="xs:nonNegativeInteger"/>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="state" type="xs:boolean" use="optional" default="false"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="locationSection">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+							<xs:element name="location" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+									</xs:sequence>
+									<xs:attribute name="type" type="xs:ID" use="required"/>
+									<xs:attribute name="nr" type="xs:nonNegativeInteger" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="integrationSiteSection">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+							<xs:element name="integrationSite" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+										<xs:element name="param" type="paramType" minOccurs="0" maxOccurs="unbounded"/>
+									</xs:sequence>
+									<xs:attribute name="type" type="xs:ID" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="blockSection">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+							<xs:element name="block" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+										<xs:element name="param" type="paramType" minOccurs="0" maxOccurs="unbounded"/>
+									</xs:sequence>
+									<xs:attribute name="type" type="xs:ID" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="networkSection">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+							<xs:element name="network" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+										<xs:element name="param" type="paramType" minOccurs="0" maxOccurs="unbounded"/>
+									</xs:sequence>
+									<xs:attribute name="type" type="xs:ID" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="dataSourceSection">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+							<xs:element name="dataSource" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+										<xs:element name="param" minOccurs="0" maxOccurs="unbounded"/>
+									</xs:sequence>
+									<xs:attribute name="type" type="xs:ID" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="insertSection">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+							<xs:element name="insert" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+										<xs:element name="param" type="paramType" minOccurs="0" maxOccurs="unbounded"/>
+									</xs:sequence>
+									<xs:attribute name="type" type="xs:ID" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="taskSection">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+							<xs:element name="task" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+										<xs:element name="param" type="paramType" minOccurs="0" maxOccurs="unbounded"/>
+									</xs:sequence>
+									<xs:attribute name="type" type="xs:ID" use="required"/>
+									<xs:attribute name="patternSet" use="required">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="required"/>
+												<xs:enumeration value="optional"/>
+												<xs:enumeration value="prohibited"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="compositeTaskSection">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+							<xs:element name="compositeTask" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+										<xs:element name="param" type="paramType" minOccurs="0" maxOccurs="unbounded"/>
+									</xs:sequence>
+									<xs:attribute name="type" type="xs:ID" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="executionSection">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+							<xs:element name="part" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="annotation" minOccurs="0"/>
+										<xs:element name="param" minOccurs="2" maxOccurs="2">
+											<xs:complexType>
+												<xs:attribute name="name" type="xs:string" use="required"/>
+												<xs:attribute name="use" use="required">
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:enumeration value="optional"/>
+															<xs:enumeration value="required"/>
+															<xs:enumeration value="ignored"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="default" type="xs:double" use="optional" default="0.0"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="type" type="xs:IDREF" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="codeFile" type="xs:anyURI" use="optional"/>
+			<xs:attribute name="location" type="xs:anyURI" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="paramType">
+		<xs:annotation>
+			<xs:documentation>Definition of a single parameter with name, use and default value (if optional)</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="use" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="required"/>
+					<xs:enumeration value="optional"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="default" type="xs:double" use="optional" default="0.0"/>
+	</xs:complexType>
+	<xs:complexType name="annotationType">
+		<xs:annotation>
+			<xs:documentation>Allows to add documentation and other information</xs:documentation>
+		</xs:annotation>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="appinfo">
+				<xs:complexType mixed="true">
+					<xs:sequence>
+						<xs:any namespace="##any" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:attribute name="source" type="xs:anyURI" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="documentation">
+				<xs:complexType mixed="true">
+					<xs:sequence>
+						<xs:any namespace="##any" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:attribute name="source" type="xs:anyURI" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+		<xs:attribute name="id" type="xs:ID" use="optional"/>
+	</xs:complexType>
+</xs:schema>

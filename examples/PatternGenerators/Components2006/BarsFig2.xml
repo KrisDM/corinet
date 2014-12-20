@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<patternGenerator xmlns="http://www.corinet.org/namespaces/CORINETSetup" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup ../../../code/xml/Setup/experimentSetup.xsd" 
+definitionFile="./code/xml/Definition/languageDefinition.xml" patterns="48" location="./examples/PatternGenerators/Components2006/BarsFig2Results.xml">
+	<annotation>
+		<documentation>
+			Task from "Learning image components for object recognition", Journal of Machine Learning Research 7:793-815,2006.
+		</documentation>
+		<documentation>
+			This patternGenerator generates the data for fig. 2 on page 5.
+		</documentation>
+	</annotation>
+	<task type="bars1" columns="8" rows="8">
+		<taskParams>
+			<param name="horProb" value="0.125"/>
+			<param name="verProb" value="0.125"/>
+		</taskParams>
+	</task>
+</patternGenerator>

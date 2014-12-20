@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<patternSet xmlns="http://www.corinet.org/namespaces/CORINETSetup" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" columns="20">
+	<annotation>
+		<documentation>
+			PatternSet from "A feedback model of perceptual learning and categorisation", Visual Cognition 13(2):129-65,2006.
+		</documentation>
+		<documentation>
+			This patternSet contains a representation for the bars of the training patterns of fig. 7a. 
+		</documentation>
+		<documentation>
+			These patterns are generated with the Matlab script 'morphPatterns.m' in this directory.
+			Patterns are numbered top-down, then left to right.
+		</documentation>
+	</annotation>
+    <p><r>0  0  1  0  0  0  0  1  0  0  1  0  1  0  0  0  0  1  0  0  </r></p>
+    <p><r>0  0  1  0.3333  0  0  0  0.6667  0  0  0.6667  0  1  0  0  0.3333  0  1  0  0  </r></p>
+    <p><r>0  0  1  0.6667  0  0  0  0.3333  0  0  0.3333  0  1  0  0  0.6667  0  1  0  0  </r></p>
+    <p><r>0  0  1  1  0  0  0  0  0  0  0  0  1  0  0  1  0  1  0  0  </r></p>
+    <p><r>0  0  0.6667  0.3333  0.3333  0  0  1  0  0  1  0  0.6667  0  0  0  0  1  0  0  </r></p>
+    <p><r>0  0  0.6667  0.5556  0.3333  0  0  0.6667  0  0  0.7778  0  0.7778  0  0  0.3333  0  0.8889  0  0  </r></p>
+    <p><r>0  0  0.6667  0.7778  0.3333  0  0  0.3333  0  0  0.5556  0  0.8889  0  0  0.6667  0  0.7778  0  0  </r></p>
+    <p><r>0  0  0.6667  1  0.3333  0  0  0  0  0  0.3333  0  1  0  0  1  0  0.6667  0  0  </r></p>
+    <p><r>0  0  0.3333  0.6667  0.6667  0  0  1  0  0  1  0  0.3333  0  0  0  0  1  0  0  </r></p>
+    <p><r>0  0  0.3333  0.7778  0.6667  0  0  0.6667  0  0  0.8889  0  0.5556  0  0  0.3333  0  0.7778  0  0  </r></p>
+    <p><r>0  0  0.3333  0.8889  0.6667  0  0  0.3333  0  0  0.7778  0  0.7778  0  0  0.6667  0  0.5556  0  0  </r></p>
+    <p><r>0  0  0.3333  1  0.6667  0  0  0  0  0  0.6667  0  1  0  0  1  0  0.3333  0  0  </r></p>
+    <p><r>0  0  0  1  1  0  0  1  0  0  1  0  0  0  0  0  0  1  0  0  </r></p>
+    <p><r>0  0  0  1  1  0  0  0.6667  0  0  1  0  0.3333  0  0  0.3333  0  0.6667  0  0  </r></p>
+    <p><r>0  0  0  1  1  0  0  0.3333  0  0  1  0  0.6667  0  0  0.6667  0  0.3333  0  0  </r></p>
+    <p><r>0  0  0  1  1  0  0  0  0  0  1  0  1  0  0  1  0  0  0  0  </r></p>
+</patternSet>

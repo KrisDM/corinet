@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE experiment[
+	<!ENTITY typeDefaults SYSTEM "typeDefaults.xml">
+]>
+<experiment xmlns="http://www.corinet.org/namespaces/CORINETSetup"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup ../../../code/xml/Setup/experimentSetup.xsd"
+definitionFile="./code/xml/Definition/languageDefinition.xml">
+	<annotation>
+		<documentation>
+			Experiment from "Learning image components for object recognition", Journal of Machine Learning Research 7:793-815,2006.
+		</documentation>
+		<documentation>
+			This file generates the data for fig. 3 on page 6 and fig.4 on page 7. Only the data for algorithms nndi and di
+			are generated; the nmf algorithms are currently not available in corinet.
+		</documentation>
+		<documentation>
+			Technical issues: a network with 32 nodes (to generate results for fig 4a) and one with 16 nodes (to generate results for fig 4b)
+			are executed in 2 configurations: once with parameter negLearningRate = 0, corresponding to algorithm 'nndi'; 
+			and once with negLearningRate = 1, corresponding to algorithm 'di'. In the first execution, these networks are executed with 
+			a standard bars task using a set of randomly generated patterns p=100; in the second execution, p=400. 
+		</documentation>
+	</annotation>
+	<inputSection>
+		<inputBlock id="I0">
+			<inputRange begin="0" end="63" step="1"/>
+		</inputBlock>
+	</inputSection>
+	<networkSection>
+		<network type="discrete" inputs="64" id="N32">
+			<block id="B32" nodes="32" outputBlock="true">
+				<integrationSite type="conj2" inputRefs="I0" id="D32">
+					<siteParams>
+						<loopParam name="negLearningRate" values="0 1" id="P32"/>
+					</siteParams>
+					<initialisation type="random">
+						<randGen type="normal">
+							<param name="mean" value="0.015625"/>
+							<param name="std" value="0.0005"/>
+						</randGen>
+					</initialisation>
+				</integrationSite>
+			</block>
+		</network>
+		<network type="discrete" inputs="64" id="N16">
+			<block id="B16" nodes="16" outputBlock="true">
+				<integrationSite type="conj2" inputRefs="I0" id="D16">
+					<siteParams>
+						<loopParam name="negLearningRate" values="0 1" id="P16"/>
+					</siteParams>
+					<initialisation type="random">
+						<randGen type="normal">
+							<param name="mean" value="0.015625"/>
+							<param name="std" value="0.00025"/>
+						</randGen>
+					</initialisation>
+				</integrationSite>
+			</block>
+		</network>
+	</networkSection>
+	<taskSection>
+		<task type="bars1" columns="8" rows="8" store="100" id="T100">
+			<taskParams>
+				<param name="horProb" value="0.125"/>
+				<param name="verProb" value="0.125"/>
+			</taskParams>
+		</task>
+		<task type="bars1" columns="8" rows="8" store="400" id="T400">
+			<taskParams>
+				<param name="horProb" value="0.125"/>
+				<param name="verProb" value="0.125"/>
+			</taskParams>
+		</task>
+	</taskSection>
+	<executionSection xsi:type="engineV1">
+		<execution networks="N32 N16" runs="25">
+			<loop targets="P32 P16" numValues="2"/>
+			<sequence>
+				<part phase="generate" random="true" tasks="T100" iterations="100" id="G100"/><!--generate 100 patterns-->
+				<part phase="train" random="false" tasks="T100" iterations="10000" id="EP100"/><!--train with these 100 patterns-->
+			</sequence>
+		</execution>
+		<execution networks="N32 N16" runs="25">
+			<loop targets="P32 P16" numValues="2"/>
+			<sequence>
+				<part phase="generate" random="true" tasks="T400" iterations="400" id="G400"/><!--generate 400 patterns-->
+				<part phase="train" random="false" tasks="T400" iterations="10000" id="EP400"/><!--train with these 400 patterns-->
+			</sequence>
+		</execution>
+	</executionSection>
+	<defaultSection>
+		&typeDefaults;
+	</defaultSection>
+	<eventSection xsi:type="eventModelV1">
+		<report type="xml" location="./examples/Experiments/Components2006/Fig34Results.xml" id="R1"/>
+		<event eventTime="endPart" parts="EP100 EP400">
+			<record targets="D32 D16" type="weights" report="R1"/>
+		</event>
+	</eventSection>
+</experiment>

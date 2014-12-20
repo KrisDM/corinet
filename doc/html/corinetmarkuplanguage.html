@@ -1,0 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Untitled Document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body>
+<h1> corinet Markup Language</h1>
+<p>The <tt>corinet</tt> markup language specifies several file formats:</p>
+<p>Files of type <a href="./experimentList/experimentList.html">&lt;experimentList&gt;</a> 
+  contain 1 or more references to experiment files. Each of these experiment files 
+  is executed in the order of their appearance in the list file.</p>
+<p>Files of type <a href="./experimentSetup/experimentSetup.html">&lt;experiment&gt;</a> 
+  contain the definitions of networks, tasks, and descriptions of how networks 
+  and tasks are combined in an execution.</p>
+<p>Files of type <a href="./languageDefinition/languageDefinition.html">&lt;languageDefinition&gt;</a> 
+  serve two purposes: firstly, they define additional constraints on the validity 
+  of experiment files by defining admissable types and parameters for specific 
+  network and task elements. Secondly, files of this type can serve to generate 
+  C++ classes for new network and task elements.</p>
+<p>The main languageDefinition file <a href="../code/xml/Definition/languageDefinition.xml">(languageDefinition.xml</a>) 
+  contains all currently supported network and tasks elements. It provides additional 
+  information on how to write experiment setup files. Other languageDefinition 
+  files are local to the system and form, together with the C++ code generated 
+  from them, <em>sandboxes</em> for testing of new network and task elements.</p>
+<p>Files of type <a href="./resultsFile/resultsFile.html">&lt;results&gt;</a> 
+  contain the results of experiments.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE experiment [
+	<!ENTITY typeDefaults SYSTEM "typeDefaults.xml">
+	<!ENTITY fig4Train SYSTEM "../../PatternSets/Coding2004/Fig4-Train.xml">
+	<!ENTITY fig5Train SYSTEM "../../PatternSets/Coding2004/Fig5-Train.xml">
+	<!ENTITY fig6Train SYSTEM "../../PatternSets/Coding2004/Fig6-Train.xml">
+	<!ENTITY fig7Train SYSTEM "../../PatternSets/Coding2004/Fig7-Train.xml">
+	<!ENTITY fig8Train SYSTEM "../../PatternSets/Coding2004/Fig8-Train.xml">
+	<!ENTITY fig9Train SYSTEM "../../PatternSets/Coding2004/Fig9-Train.xml">
+	<!ENTITY fig456Test SYSTEM "../../PatternSets/Coding2004/Fig4-5-6-Test.xml">
+	<!ENTITY fig789Test SYSTEM "../../PatternSets/Coding2004/Fig7-8-9-Test.xml">
+]>
+<experiment xmlns="http://www.corinet.org/namespaces/CORINETSetup" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup ../../../code/xml/Setup/experimentSetup.xsd" 
+definitionFile="./code/xml/Definition/languageDefinition.xml">
+	<inputSection>
+		<inputBlock id="I0">
+			<inputRange begin="0" step="1" end="63"></inputRange>
+		</inputBlock>
+	</inputSection>
+	<networkSection>
+		<network type="discrete" inputs="64" id="N0">
+			<block nodes="32" id="B0" outputBlock="true">
+				<integrationSite inputRefs="I0" type="conj2" id="IS0"/>
+			</block>
+		</network>
+	</networkSection>
+	<taskSection>
+		<task type="set1" columns="8" rows="8" id="Fig4">
+			&fig4Train;	
+		</task>
+		<task type="set1" columns="8" rows="8" id="Fig5">
+			&fig5Train;	
+		</task>
+		<task type="set1" columns="8" rows="8" id="Fig6">
+			&fig6Train;	
+		</task>
+		<task type="set1" columns="8" rows="8" id="Fig456">
+			&fig456Test;	
+		</task>
+		<task type="set1" columns="8" rows="8" id="Fig7">
+			&fig7Train;	
+		</task>
+		<task type="set1" columns="8" rows="8" id="Fig8">
+			&fig8Train;	
+		</task>
+		<task type="set1" columns="8" rows="8" id="Fig9">
+			&fig9Train;
+		</task>
+		<task type="set1" columns="8" rows="8" id="Fig789">
+			&fig789Test;	
+		</task>
+	</taskSection>
+	<executionSection xsi:type="engineV1">
+		<execution networks="N0" runs="25">
+			<sequence>
+				<part phase="train" tasks="Fig4" iterations="384" id="EP4A"></part>
+				<part phase="test" tasks="Fig456" iterations="3" id="EP4B"></part>
+			</sequence>
+		</execution>
+		<execution networks="N0" runs="25">
+			<sequence>
+				<part phase="train" tasks="Fig5" iterations="1024" id="EP5A"></part>
+				<part phase="test" tasks="Fig456" iterations="3" id="EP5B"></part>
+			</sequence>
+		</execution>
+		<execution networks="N0" runs="25">
+			<sequence>
+				<part phase="train" tasks="Fig6" iterations="768" id="EP6A"></part>
+				<part phase="test" tasks="Fig456" iterations="3" id="EP6B"></part>
+			</sequence>
+		</execution>
+		<execution networks="N0">
+			<sequence>
+				<part phase="train" tasks="Fig7" iterations="192" id="EP7A"></part>
+				<part phase="test" tasks="Fig789" iterations="3" id="EP7B"></part>
+			</sequence>
+		</execution>
+		<execution networks="N0">
+			<sequence>
+				<part phase="train" tasks="Fig8" iterations="1536" id="EP8A"></part>
+				<part phase="test" tasks="Fig789" iterations="3" id="EP8B"></part>
+			</sequence>
+		</execution>
+		<execution networks="N0">
+			<sequence>
+				<part phase="train" tasks="Fig9" iterations="576" id="EP9A"></part>
+				<part phase="test" tasks="Fig789" iterations="3" id="EP9B"></part>
+			</sequence>
+		</execution>
+	</executionSection>
+	<defaultSection>
+		&typeDefaults;
+	</defaultSection>
+	<eventSection xsi:type="eventModelV1">
+		<defaultReport type="xml" location="./examples/Results/Coding2004-Fig456789.xml"></defaultReport>
+		<event eventTime="endPart" parts="EP4A EP5A EP6A EP7A EP8A EP9A">
+			<condition variable="run" type="equals" values="0"/>
+			<record targets="IS0" type="weights"></record>
+		</event>
+		<event eventTime="endIteration" parts="EP4B EP5B EP6B EP7B EP8B EP9B">
+			<condition variable="run" type="equals" values="0"/>
+			<record targets="B0" type="blockOutput"></record>
+		</event>
+		<event eventTime="endIteration" parts="EP4A">
+			<condition variable="iteration" type="multiple" values="10"></condition>
+			<record targets="IS0" type="weights">
+				<report type="xml" location="./examples/Results/Coding2004-Learn4.xml"/>
+			</record>
+		</event>
+		<event eventTime="endIteration" parts="EP5A">
+			<condition variable="iteration" type="multiple" values="10"></condition>
+			<record targets="IS0" type="weights">
+				<report type="xml" location="./examples/Results/Coding2004-Learn5.xml"/>
+			</record>
+		</event>
+		<event eventTime="endIteration" parts="EP6A">
+			<condition variable="iteration" type="multiple" values="10"></condition>
+			<record targets="IS0" type="weights">
+				<report type="xml" location="./examples/Results/Coding2004-Learn6.xml"/>
+			</record>
+		</event>
+	</eventSection>
+</experiment>

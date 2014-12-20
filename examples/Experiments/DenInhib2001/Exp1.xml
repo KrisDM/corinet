@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<experiment xmlns="http://www.corinet.org/namespaces/CORINETSetup"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup ../../../code/xml/Setup/experimentSetup.xsd"
+definitionFile="./code/xml/Definition/languageDefinition.xml">
+	<annotation>
+		<documentation>
+			Experiment from "Dendritic Inhibition Enhances Neural Coding Properties", Cerebral Cortex 11(12): 1144-9,2001.
+		</documentation>
+		<documentation>
+			This file implements Experiment 1 from the paper, Figure 2 on page 3.
+			Results are written to XML file and can be plotted in a format similar to the one used in the paper
+			by running the Matlab script 'Exp1.m' in this same directory.
+		</documentation>
+		<documentation>
+			Technical issues: simple network consisting of one block with a single integrationSite.
+			All elements (parameters, outputFunction etc.) are defined locally (no use of default elements).
+		</documentation>
+	</annotation>
+	<inputSection>
+		<inputBlock id="I0">
+			<inputIndices>0 1 2</inputIndices>
+		</inputBlock>
+	</inputSection>
+	<networkSection>
+		<network type="discrete" inputs="3" id="N0">
+			<block nodes="2" id="B0" outputBlock="true">
+				<integrationSite type="compInt1" id="D0" inputRefs="I0">
+					<siteParams>
+						<param name="alphaStep" value="0.25"></param>
+						<param name="alphaMax" value="10"></param>
+					</siteParams>
+					<initialisation type="explicit">
+						<w>
+							<n>1 1 0</n>
+							<n>1 1 1</n>
+						</w>
+					</initialisation>
+					<normalisation type="normNode"/>
+				</integrationSite>
+				<outputFunction type="addSites"/>
+			</block>
+		</network>
+	</networkSection>
+	<taskSection>
+		<task id="T0" type="bits1" columns="3"/>
+	</taskSection>
+	<executionSection xsi:type="engineV1">
+		<execution networks="N0">
+			<sequence>
+				<part phase="test" tasks="T0" iterations="8" id="EP0"/>
+			</sequence>
+		</execution>
+	</executionSection>
+	<eventSection xsi:type="eventModelV1">
+		<report type="xml" location="./examples/Experiments/DenInhib2001/Exp1Results.xml" id="R1"/>
+		<event eventTime="endIteration" parts="EP0">
+			<record type="netInput" targets="N0" report="R1"/>
+			<record type="netOutput" targets="N0" report="R1"/>
+		</event>
+		<event eventTime="endPart" parts="EP0">
+			<record type="weights" targets="D0" report="R1"/>
+		</event>
+	</eventSection>
+</experiment>

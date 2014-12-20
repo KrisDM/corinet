@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE experiment [
+	<!ENTITY typeDefaults SYSTEM "typeDefaults.xml">
+	<!ENTITY scaleI SYSTEM "../../PatternSets/Invariant2005/ScaleI.xml">
+	<!ENTITY scaleF SYSTEM "../../PatternSets/Invariant2005/ScaleF.xml">
+	<!ENTITY rotationI SYSTEM "../../PatternSets/Invariant2005/RotationI.xml">
+	<!ENTITY rotationF SYSTEM "../../PatternSets/Invariant2005/RotationF.xml">
+]>
+<experiment xmlns="http://www.corinet.org/namespaces/CORINETSetup" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup ../../../code/xml/Setup/experimentSetup.xsd" 
+definitionFile="./code/xml/Definition/languageDefinition.xml">
+	<annotation>
+		<documentation>
+			Experiment from "Learning viewpoint invariant perceptual representation from cluttered images", 
+			IEEE Transactions on Pattern Analysis and Machine Intelligence 27(5):753-761,2005.
+		</documentation>
+		<documentation>
+			This experiment generates the data for figure 6.
+		</documentation>
+		<documentation>
+			Technical issues: a double layer networks, one block in each layer, no feedback.
+			Most notable in this experiment is the use of a compositeTask and a loopParam in a targetDefault.
+			The event records the weights only at the end of each cycle.
+		</documentation>
+	</annotation>
+	<inputSection>
+		<inputBlock id="I0">
+			<inputRange begin="0" step="1" end="63"/>
+		</inputBlock>
+	</inputSection>
+	<networkSection>
+		<network type="discrete" inputs="64" id="N0">
+			<block nodes="32" id="B0">
+				<integrationSite type="conj2" inputRefs="I0" id="D0"/>
+			</block>
+			<block nodes="5" id="B1" outputBlock="true">
+				<integrationSite type="disj2" inputRefs="B0" id="D1"/>
+			</block>
+		</network>
+	</networkSection>
+	<taskSection>
+		<compositeTask type="insertIndependent" columns="8" rows="8" id="SCALE">
+			<insert inColumn="0" inRow="0" type="larger">
+				<task type="set2" columns="8" rows="8" id="IS">
+					<!--taskParams specified in targetDefaults-->
+					&scaleI;
+				</task>
+				<task type="set2" columns="8" rows="8" id="FS">
+					<!--taskParams specified in targetDefaults-->
+					&scaleF;
+				</task>
+			</insert>
+		</compositeTask>
+		<compositeTask type="insertIndependent" columns="8" rows="8" id="ROTATION">
+			<insert inColumn="0" inRow="0" type="larger">
+				<!--taskParams specified in targetDefaults-->
+				<task type="set2" columns="8" rows="8" id="IR">
+					&rotationI;
+				</task>
+				<task type="set2" columns="8" rows="8" id="FR">
+					&rotationF;
+				</task>
+			</insert>
+		</compositeTask>
+	</taskSection>
+	<executionSection xsi:type="engineV1">
+		<execution networks="N0" runs="10">
+			<loop numValues="7" targets="P0"/>
+			<sequence>
+				<part phase="train" tasks="SCALE" iterations="2500" id="FIG6A"/>
+			</sequence>
+		</execution>
+		<execution networks="N0" runs="10">
+			<loop numValues="7" targets="P0"/>
+			<sequence>
+				<part phase="train" tasks="ROTATION" iterations="2500" id="FIG6B"/>
+			</sequence>
+		</execution>
+	</executionSection>
+	<defaultSection>
+	&typeDefaults;
+	<targetDefaults>
+			<default targets="IS FS IR FR">
+				<taskParams>
+					<loopParam name="probSame" values="0.4 0.5 0.6 0.7 0.8 0.9 0.95" id="P0"/>
+				</taskParams>
+			</default>
+		</targetDefaults>
+	</defaultSection>
+	<eventSection xsi:type="eventModelV1">
+		<report type="xml" location="./examples/Experiments/Invariant2005/FIResults.xml" id="R1"/>
+		<event eventTime="endPart" parts="FIG6A FIG6B">
+			<record targets="D0 D1" type="weights" report="R1"/>
+		</event>
+	</eventSection>
+</experiment>

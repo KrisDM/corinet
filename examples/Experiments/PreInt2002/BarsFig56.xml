@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<experiment xmlns="http://www.corinet.org/namespaces/CORINETSetup"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup ../../../code/xml/Setup/experimentSetup.xsd"
+definitionFile="./code/xml/Definition/languageDefinition.xml">
+	<annotation>
+		<documentation>
+			Experiment from "Pre-integration lateral inhibition enhances unsupervised learning", Neural Computation 14(9): 2157-79,2002.
+		</documentation>
+		<documentation>
+			This file generates the data for Figure 5a (effects of varying learning rates)
+			and of Figure 5b and 6 (effects of varying network size). Data can be
+			analysed and plotted using the Matlab script 'BarsFig56 in this directory.
+		</documentation>
+		<documentation>
+			Technical issues: combination of multiple networks and multiple executions.
+			The first execution demonstrates the usage of loops: one loop running over
+			 two parameters (learning rates) simultaneously.There are 3 configurations 
+			 (3 sets of parameter values within the loop), and 25 runs within each
+			configuration, giving a total of 75 cycles in the first execution.
+			The second execution demonstrates parallel simulation of multiple networks: 
+			2 networks are simulated side-by-side; in each iteration they are presented 
+			with the same pattern. There are 25 runs within one configuration, giving a
+			total of 25 cycles in the second execution. The third network uses a
+			constructive block instead of a normal block.
+			Outputfunction, initialisation and normalisation are specified in targetDefaults.
+			Parameters are specified in targetDefaults, except for loop parameters in N0: 
+			these are specified in situ, and take priority over the values in targetDefaults.
+			A single event specification is enough to record weights in first and second
+			execution: during the first execution for D0, and during the second execution
+			for D1 and D2.
+		</documentation>
+	</annotation>
+	<inputSection>
+		<inputBlock id="I0">
+			<inputRange begin="0" end="63" step="1"/>
+		</inputBlock>
+	</inputSection>
+	<networkSection>
+		<network inputs="64" id="N0" type="discrete">
+			<block id="B0" nodes="16" outputBlock="true">
+				<integrationSite inputRefs="I0" type="conj1" id="D0">
+					<siteParams>
+						<loopParam name="learningRate" values="1 1 0.25" id="P0"/>
+						<loopParam name="negLearningRate" values="0.015625 1 0.015625" id="P1"/> 
+					</siteParams>
+				</integrationSite>
+			</block>
+		</network>
+		<network type="discrete" inputs="64" id="N1">
+			<block id="B1" nodes="32" outputBlock="true">
+				<integrationSite inputRefs="I0" type="conj1" id="D1"/>
+			</block>
+		</network>
+		<network type="discrete" inputs="64" id="N2">
+			<block type="constructive" id="B2" nodes="20" outputBlock="true">
+				<blockParams>
+					<param name="startNodes" value="2"></param>
+				</blockParams>
+				<integrationSite inputRefs="I0" type="conj1" id="D2"/>
+			</block>
+		</network>
+	</networkSection>
+	<taskSection>
+		<task type="bars1" columns="8" rows="8" id="T0">
+			<taskParams>
+				<param name="horProb" value="0.125"/>
+				<param name="verProb" value="0.125"/>
+			</taskParams>
+		</task>
+	</taskSection>
+	<executionSection xsi:type="engineV1">
+		<execution networks="N0" runs="25">
+			<loop numValues="3" targets="P0 P1"/>
+			<sequence>
+				<part phase="train" tasks="T0" iterations="1000" id="EP0"/>
+			</sequence>
+		</execution>
+		<execution networks="N1 N2" runs="25">
+			<sequence>
+				<part phase="train" tasks="T0" iterations="1000" id="EP1"/>
+			</sequence>
+		</execution>
+	</executionSection>
+	<defaultSection>
+		<targetDefaults>
+			<default targets="D0 D1 D2">
+				<initialisation type="value"/>
+			</default>
+			<default targets="D0 D1 D2">
+				<normalisation type="normNode"/>
+			</default>
+			<default targets="D0 D1 D2">
+				<siteParams>
+					<param name="alphaStep" value="0.25"/>
+					<param name="alphaMax" value="4.0"/>
+					<param name="learningRate" value="1"/>
+					<param name="negLearningRate" value="0.015625"/>
+				</siteParams>
+			</default>
+			<default targets="B0 B1 B2">
+				<outputFunction type="addSites">
+					<attenuation type="clip">
+						<param name="high" value="1.0"/>
+					</attenuation>
+					<noiseFunction type="multiplicative">
+						<randGen type="log1">
+							<param name="high" value="0.01"/>
+						</randGen>
+					</noiseFunction>
+				</outputFunction>
+			</default>
+		</targetDefaults>
+	</defaultSection>
+	<eventSection xsi:type="eventModelV1">
+		<report type="xml" location="BarsFig56Results.xml" id="R1"/>
+		<event eventTime="endIteration" parts="EP0 EP1">
+			<condition variable="iteration" type="multiple" values="25"/>
+			<record targets="D0 D1 D2" type="weights" report="R1"/>
+		</event>
+	</eventSection>
+</experiment>

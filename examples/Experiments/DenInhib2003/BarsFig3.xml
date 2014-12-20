@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<experiment xmlns="http://www.corinet.org/namespaces/CORINETSetup"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup ../../../code/xml/Setup/experimentSetup.xsd"
+definitionFile="./code/xml/Definition/languageDefinition.xml">
+	<annotation>
+		<documentation>
+			Experiment from "Exploring the functional significance of dendritic inhibition in cortical pyramidal cells", Neurocomputing 52-54:389-95,2003.
+		</documentation>
+		<documentation>
+			This file generates the data for figure 3.
+		</documentation>
+		<documentation>
+			Technical issues: two networks with different number of nodes. Multiple tasks, each one simulated in
+			a separate execution. The first execution simulates the two networks side-by-side.
+			Network elements and parameters are specified in typeDefaults, i.e. defaults
+			that refer to a type rather than a specific target ID. 
+			Conditions on the events ensure that data is recorded with
+			lower time granularity in the later part of the experiment.
+		</documentation>
+	</annotation>
+	<inputSection>
+		<inputBlock id="I0">
+			<inputRange begin="0" end="63" step="1"/>
+		</inputBlock>
+	</inputSection>
+	<networkSection>
+		<network type="discrete" inputs="64" id="N0">
+			<block nodes="16" id="B0" outputBlock="true">
+				<integrationSite inputRefs="I0" type="conj1" id="D0"/>
+			</block>
+		</network>
+		<network type="discrete" inputs="64" id="N1">
+			<block nodes="20" id="B1" outputBlock="true">
+				<integrationSite inputRefs="I0" type="conj1" id="D1"/>
+			</block>
+		</network>
+	</networkSection>
+	<taskSection>
+		<task type="bars1" columns="8" rows="8" id="T0">
+			<!--standard bars problem-->
+			<taskParams>
+				<param name="horProb" value="0.125"/>
+				<param name="verProb" value="0.125"/>
+			</taskParams>
+		</task>
+		<task type="bars2" columns="8" rows="8" id="T1">
+			<!--horizontal and vertical bars never co-occur-->
+			<taskParams>
+				<param name="horProb" value="0.125"/>
+				<param name="verProb" value="0.125"/>
+			</taskParams>
+		</task>
+		<task type="bars3" columns="8" rows="8" id="T2">
+			<!--fixed number of bars in each pattern-->
+			<taskParams>
+				<param name="numBars" value="1"/>
+			</taskParams>
+		</task>
+		<task type="bars1" columns="8" rows="8" id="T3">
+			<!--different probabilities for horizontal and vertical bars-->
+			<taskParams>
+				<param name="horProb" value="0.125"/>
+				<param name="verProb" value="0.0625"/>
+			</taskParams>
+		</task>
+	</taskSection>
+	<executionSection xsi:type="engineV1">
+		<execution networks="N0 N1" runs="10">
+			<sequence>
+				<part phase="train" tasks="T0" iterations="2000" id="EP0"/>
+			</sequence>
+		</execution>
+		<execution networks="N0" runs="10">
+			<sequence>
+				<part phase="train" tasks="T1" iterations="2000" id="EP1"/>
+			</sequence>
+		</execution>
+		<execution networks="N0" runs="10">
+			<sequence>
+				<part phase="train" tasks="T2" iterations="2000" id="EP2"/>
+			</sequence>
+		</execution>
+		<execution networks="N0" runs="10">
+			<sequence>
+				<part phase="train" tasks="T3" iterations="2000" id="EP3"/>
+			</sequence>
+		</execution>
+	</executionSection>
+	<defaultSection>
+		<typeDefaults>
+			<default types="conj1">
+				<siteParams>
+					<param name="alphaStep" value="0.25"/>
+					<param name="alphaMax" value="4"/>
+					<param name="learningRate" value="1"/>
+					<param name="negLearningRate" value="0.015625"/>
+				</siteParams>
+			</default>
+			<default numSites="1">
+				<outputFunction type="addSites">
+					<noiseFunction type="multiplicative">
+						<randGen type="log1">
+							<param name="high" value="0.01"/>
+						</randGen>
+					</noiseFunction>
+				</outputFunction>
+			</default>
+			<default types="conj1">
+				<initialisation type="value"/>
+			</default>
+			<default types="conj1">
+				<normalisation type="normNode"/>
+			</default>
+		</typeDefaults>
+	</defaultSection>
+	<eventSection xsi:type="eventModelV1">
+		<report type="xml" location="./examples/Experiments/DenInhib2003/BarsFig3Results.xml" id="R1"/>
+		<event eventTime="endIteration" parts="EP0 EP1 EP2 EP3">
+			<condition variable="iteration" type="multiple" values="10"/><!--every 10 iterations-->
+			<condition variable="iteration" type="lt" values="500"/><!--for 500 first iterations only-->
+			<record targets="D0 D1"  type="weights" report="R1"/>
+		</event>
+		<event eventTime="endIteration" parts="EP0 EP1 EP2 EP3">
+			<condition variable="iteration" type="multiple" values="100"/><!--every 100 iterations-->
+			<condition variable="iteration" type="gteq" values="500"/><!--for the subsequent 1500 iterations-->
+			<record targets="D0 D1"  type="weights" report="R1"/>
+		</event>
+	</eventSection>
+</experiment>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE experiment[
+	<!ENTITY typeDefaults SYSTEM "typeDefaults.xml">
+]>
+<experiment xmlns="http://www.corinet.org/namespaces/CORINETSetup" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup ../../../code/xml/Setup/experimentSetup.xsd"
+definitionFile="./code/xml/Definition/languageDefinition.xml">
+	<annotation>
+		<documentation>
+			Experiment from "A feedback model of visual attention", Journal of Cognitive Neuroscience 16(2):219-37,2004.
+		</documentation>
+		<documentation>
+			This file sets up the network described in sect. 2.1.2 (fig. 7b); it generates the results for fig. 6c.
+		</documentation>
+		<documentation>
+			Technical issues: two layer network, one block per layer. The node in the lower layer has 2 integrationSites,
+			a basal dendrite receiving the feedforward stimulus and an apical dendrite receiving an attentional bias.
+			-------------------------------------------------------------------------------------------------------------------------------------------
+			Integration parameters, normalisation and outputFunction are specified in the external typeDefaults.xml file,
+			and included in this file through the entity declaration at the top of the page.
+			The weights of the integrationSite elements are specified explicitly, and grouped together per node (n).
+			-------------------------------------------------------------------------------------------------------------------------------------------
+			The input to the network consists of a stimulus and an attentional bias. The "on" parameter for the stimulus
+			task is a loopParam over 5 values, generating the data for the five graphs of fig 6c. 
+		</documentation>
+	</annotation>
+	<inputSection>
+		<inputBlock id="IB0">
+			<inputIndices>0</inputIndices>
+		</inputBlock>
+		<inputBlock id="IB1">
+			<inputIndices>1</inputIndices>
+		</inputBlock>
+	</inputSection>
+	<networkSection>
+		<network type="discrete" inputs="2" id="N0">
+			<block nodes="1" id="B0">
+				<integrationSite inputRefs="IB0" type="compInt1" location="basal" id="D0">
+					<initialisation type="explicit">
+						<w>
+							<n>1</n>
+						</w>
+					</initialisation>
+				</integrationSite>
+				<integrationSite inputRefs="IB1 B1" type="addInt1" location="apical" id="D1">
+					<initialisation type="explicit">
+						<w>
+							<n>0.5 0.3</n>
+						</w>
+					</initialisation>
+				</integrationSite>
+			</block>
+			<block nodes="1" id="B1" outputBlock="true">
+				<integrationSite inputRefs="B0" type="compInt1" location="basal" id="D2">
+					<initialisation type="explicit">
+						<w>
+							<n>0.6</n>
+						</w>
+					</initialisation>
+				</integrationSite>
+			</block>
+		</network>
+	</networkSection>
+	<taskSection>
+		<task  type="set1" columns="1" id="STIMULUS">
+			<taskParams>
+				<loopParam name="on" values="0.1 0.2 0.4 0.8 1.6" id="P0"/>
+			</taskParams>
+			<patternSet columns="1">
+				<p><r>1</r></p>
+				<p><r>1</r></p>
+			</patternSet>
+		</task>
+		<task  type="set1" columns="1" id="BIAS">
+			<taskParams>
+				<param name="on" value="0.75"/>
+			</taskParams>
+			<patternSet columns="1">
+				<p><r>0</r></p>
+				<p><r>1</r></p>
+			</patternSet>
+		</task>
+	</taskSection>
+	<executionSection xsi:type="engineV1">
+		<execution networks="N0">
+			<loop numValues="5" targets="P0"/>
+			<sequence>
+				<part phase="test" random="false" tasks="STIMULUS BIAS" iterations="2" id="EP0"/>
+			</sequence>
+		</execution>
+	</executionSection>
+	<defaultSection>
+		&typeDefaults;
+	</defaultSection>
+	<eventSection xsi:type="eventModelV1">
+		<report type="xml" location="./examples/Experiments/Attention2004/Exp2Results.xml" id="R1"/>
+		<event eventTime="afterSetInput" parts="EP0">
+			<record targets="N0" type="netInput" report="R1"/>
+		</event>
+		<event eventTime="afterOutput" parts="EP0">
+			<record targets="N0" type="netOutput" report="R1"/>
+		</event>
+	</eventSection>
+</experiment>

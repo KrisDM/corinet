@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE experiment[
+	<!ENTITY typeDefaults SYSTEM "typeDefaults.xml">
+]>
+<experiment xmlns="http://www.corinet.org/namespaces/CORINETSetup"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup ../../../code/xml/Setup/experimentSetup.xsd"
+definitionFile="./code/xml/Definition/languageDefinition.xml">
+	<annotation>
+		<documentation>
+			Experiment from "Learning image components for object recognition", Journal of Machine Learning Research 7:793-815,2006.
+		</documentation>
+		<documentation>
+			This file generates the data for fig. 5 on page 8. Only the data for algorithms nndi and di
+			are generated; the nmf algorithms are currently not available in corinet.
+		</documentation>
+		<documentation>
+			Technical issues: a network with 32 nodes is executed in 2 configurations: once with parameter negLearningRate = 0, 
+			corresponding to algorithm 'nndi'; and once with negLearningRate = 1, corresponding to algorithm 'di'. 
+			In the first two executions, the network is executed with bars whose pixel values are added at points of overlap, 
+			for p=100 and p=400 respectively. 
+			In the last two executions, the network is executed with a bars task where horizontal and vertical bars do never 
+			co-occur, for p=100 and p=400 respectively. 
+		</documentation>
+	</annotation>
+	<inputSection>
+		<inputBlock id="I0">
+			<inputRange begin="0" end="63" step="1"/>
+		</inputBlock>
+	</inputSection>
+	<networkSection>
+		<network type="discrete" inputs="64" id="N32">
+			<block id="B32" nodes="32" outputBlock="true">
+				<integrationSite type="conj2" inputRefs="I0" id="D32">
+					<siteParams>
+						<loopParam name="negLearningRate" values="0 1" id="P32"/>
+					</siteParams>
+					<initialisation type="random">
+						<randGen type="normal">
+							<param name="mean" value="0.015625"/>
+							<param name="std" value="0.0005"/>
+						</randGen>
+					</initialisation>
+				</integrationSite>
+			</block>
+		</network>
+	</networkSection>
+	<taskSection>
+		<compositeTask type="insertIndependent" columns="8" rows="8" store="100" id="CT100"><!--overlapping points have linear combinations of pixel values-->
+			<insert type="addPixelValues" inColumn="0" inRow="0">
+				<task type="bars1" columns="8" rows="8" id="H100">
+					<taskParams>
+						<param name="horProb" value="0.125"/>
+						<param name="verProb" value="0.0"/>
+					</taskParams>
+				</task>
+				<task type="bars1" columns="8" rows="8" id="V100">
+					<taskParams>
+						<param name="horProb" value="0.0"/>
+						<param name="verProb" value="0.125"/>
+					</taskParams>
+				</task>
+			</insert>
+		</compositeTask>
+		<compositeTask type="insertIndependent" columns="8" rows="8" store="400" id="CT400"><!--overlapping points have linear combinations of pixel values-->
+			<insert type="addPixelValues" inColumn="0" inRow="0">
+				<task type="bars1" columns="8" rows="8" id="H400">
+					<taskParams>
+						<param name="horProb" value="0.125"/>
+						<param name="verProb" value="0.0"/>
+					</taskParams>
+				</task>
+				<task type="bars1" columns="8" rows="8" id="V400">
+					<taskParams>
+						<param name="horProb" value="0.0"/>
+						<param name="verProb" value="0.125"/>
+					</taskParams>
+				</task>
+			</insert>
+		</compositeTask>
+		<task type="bars2" columns="8" rows="8" store="100" id="T100"><!--horizontal and vertical bars never co-occur-->
+			<taskParams>
+				<param name="horProb" value="0.125"/>
+				<param name="verProb" value="0.125"/>
+			</taskParams>
+		</task>
+		<task type="bars2" columns="8" rows="8" store="400" id="T400"><!--horizontal and vertical bars never co-occur-->
+			<taskParams>
+				<param name="horProb" value="0.125"/>
+				<param name="verProb" value="0.125"/>
+			</taskParams>
+		</task>
+	</taskSection>
+	<executionSection xsi:type="engineV1">
+		<execution networks="N32" runs="25">
+			<loop targets="P32" numValues="2"/>
+			<sequence>
+				<part phase="generate" random="true" tasks="CT100" iterations="100" id="GC100"/><!--generate 100 patterns-->
+				<part phase="train" random="false" tasks="CT100" iterations="10000" id="EPC100"/><!--train with these 100 patterns-->
+			</sequence>
+		</execution>
+		<execution networks="N32" runs="25">
+			<loop targets="P32" numValues="2"/>
+			<sequence>
+				<part phase="generate" random="true" tasks="CT400" iterations="400" id="GC400"/><!--generate 400 patterns-->
+				<part phase="train" random="false" tasks="CT400" iterations="10000" id="EPC400"/><!--train with these 400 patterns-->
+			</sequence>
+		</execution>
+		<execution networks="N32" runs="25">
+			<loop targets="P32" numValues="2"/>
+			<sequence>
+				<part phase="generate" random="true" tasks="T100" iterations="100" id="G100"/><!--generate 100 patterns-->
+				<part phase="train" random="false" tasks="T100" iterations="10000" id="EP100"/><!--train with these 100 patterns-->
+			</sequence>
+		</execution>
+		<execution networks="N32" runs="25">
+			<loop targets="P32" numValues="2"/>
+			<sequence>
+				<part phase="generate" random="true" tasks="T400" iterations="400" id="G400"/><!--generate 400 patterns-->
+				<part phase="train" random="false" tasks="T400" iterations="10000" id="EP400"/><!--train with these 400 patterns-->
+			</sequence>
+		</execution>
+	</executionSection>
+	<defaultSection>
+		&typeDefaults;
+	</defaultSection>
+	<eventSection xsi:type="eventModelV1">
+		<report type="xml" location="./examples/Experiments/Components2006/Fig5Results.xml" id="R1"/>
+		<event eventTime="endPart" parts="EPC100 EPC400 EP100 EP400">
+			<record targets="D32" type="weights" report="R1"/>
+		</event>
+	</eventSection>
+</experiment>

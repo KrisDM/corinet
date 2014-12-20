@@ -1,0 +1,7 @@
+rPath <- paste(Sys.getenv("CORINETROOT"),"code/r/",sep="")
+source(paste(rPath,"analyseRandTest.R",sep=""))
+source(paste(rPath,"corinet.R",sep=""))
+source(paste(rPath,"readCorinet.R",sep=""))
+source(paste(rPath,"readPatternSet.R",sep=""))
+source(paste(rPath,"writePatternSet.R",sep=""))
+rm(rPath)

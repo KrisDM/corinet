@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CORINET Installation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+<body>
+<h1>Installation Guidelines</h1>
+<h2>1. Preparing for installation</h2>
+<ol>
+  <li>Make a directory to hold all files for the <tt>corinet</tt> project.</li>
+  <li>Define an environment variable <tt>CORINETROOT</tt> (in capitals) pointing 
+    to this directory.</li>
+  <li>Make a <tt>$CORINETROOT/bin</tt> directory and add it to your search path.</li>
+  <li> <tt>corinet</tt> uses the Xerces-C xml parser library (version 2.7.0). 
+    Download from <a href="http://xml.apache.org/xerces-c/">here</a> and follow 
+    the <a href="http://xml.apache.org/xerces-c/install.html">installation</a> 
+    instructions.<br/>
+    When the build process was successful, do the following: 
+    <ul>
+      <li> On Windows: copy <tt>xerces-c.lib</tt> and <tt>xerces-c_2_7.dll</tt> 
+        to the <tt>$CORINETROOT/bin</tt> directory. The .lib file is created as 
+        <tt>xerces-c_2.lib</tt>, so name should be changed. </li>
+      <li> On Linux: copy <tt>libxerces-c.so.27.0</tt> to a directory in the <tt>LIB_SEARCH_PATH</tt>, 
+        e.g. <tt>/usr/lib</tt>. </li>
+      <li> On other Unix systems requirements are similar: a '.so' or '.sl' file 
+        included in the search path of the dynamic loader. </li>
+    </ul>
+  </li>
+  <li> The <tt>corinet</tt> project can be build from the command line using the 
+    <a href="http://www.boost.org">Boost</a> build system. A source distribution 
+    of Boost Build V2 is included in <tt>$CORINETROOT/tools/boost-build</tt>. 
+    Boost Build itself can be build from the command line by changing to the <tt>$CORINETROOT/tools/boost-build/jam_src</tt> 
+    directory and executing <tt>build.bat</tt> (on Windows) or <tt>build.sh</tt> 
+    (on Unix). These scripts build the <tt>bjam</tt> executable in <tt>$CORINETROOT/tools/boost-build/jam_src/bin.XXX</tt>, 
+    where <tt>XXX</tt> is a platform dependent suffix. Copy <tt>bjam</tt> from 
+    that location to a location in the search path (e.g. to <tt>$CORINETROOT/bin</tt>)<br/>
+    To configure <tt>bjam</tt> for your compiler, go to <tt>$CORINETROOT/tools/boost-build</tt>, 
+    open <tt>user-config.jam</tt> in a text editor and uncomment one of the 'using' 
+    lines: e.g., for compilation with gcc, uncomment <tt>'using gcc ;'</tt> and 
+    comment out (with #) all other options. If your compiler is not listed, please 
+    refer to the Boost Build documentation files. </li>
+</ol>
+
+
+<h2>2. Building corinet</h2>
+<ol>
+  <li> Unzip the <tt>corinet.zip</tt> or <tt>corinet.tar.gz</tt> archive inside 
+    the <tt>CORINETROOT</tt> directory. </li>
+  <li> To build <tt>corinet</tt> from the command line using Boost Build V2, make 
+    sure <tt>bjam</tt> is installed as described above. Go to <tt>$CORINETROOT/projects/boost/console/</tt> 
+    and execute the command <tt>bjam</tt>. This causes the file <tt>Jamroot</tt> 
+    to be read and its build commands to be executed. As a result, the <tt>corinet</tt> 
+    executable is built and copied to <tt>$CORINETROOT/bin</tt>. All intermediate 
+    files are stored inside <tt>$CORINETROOT/build</tt>. Recompilation and relinking 
+    of <tt>corinet</tt> can be performed in the same way. Newly added sandbox 
+    C++ (.cpp) files are automatically included in the compilation process if 
+    they reside in <tt>$CORINETROOT/sandboxes/XXX/</tt>, where <tt>XXX</tt> is 
+    the name of any subdirectory. <br/>
+    Executing <tt>bjam debug</tt> causes a debug version to be build inside the 
+    <tt>$CORINETROOT/build</tt> directory, but it is not copied to <tt>$CORINETROOT/bin</tt>. 
+    <br/>
+    <tt>bjam clean</tt> cleans all intermediate files and forces a rebuild on 
+    the next build. <br/>
+    If compilation or linking fails, see the <tt>Jamroot</tt> file for possible 
+    causes.</li>
+  <li> If you are using an alternative development environment, such as <tt>Visual 
+    Studio</tt>, <tt>C++Builder</tt> or <tt>CodeWarrior</tt>, please put project 
+    files in a directory inside <tt>$CORINETROOT/projects</tt>, intermediate build 
+    files inside <tt>$CORINETROOT/build/console</tt>, and the release executable 
+    in <tt>$CORINETROOT/bin</tt>. This will ensure minimal disruption during future 
+    upgrades. </li>
+  <li> At the command, type <tt>corinet -t</tt>. If the test is succesful, the 
+    program is ready to use! </li>
+</ol>
+
+<h2>3. Integration with Matlab</h2>
+M scripts for integration with <tt>Matlab</tt> (running <tt>corinet</tt> from 
+the <tt>Matlab</tt> command prompt, reading and writing results and patternSets) 
+can be found in <tt>$CORINETROOT/code/matlab</tt>. To use these scripts, add directory 
+<tt>$CORINETROOT/code/matlab</tt> to the <tt>Matlab</tt> search path. 
+<h2>4. Integration with R</h2>
+Similar scripts are provided for integration with <tt>R</tt> in <tt>$CORINETROOT/code/r</tt>. 
+To make them available in the <tt>R</tt> workspace, source the file <tt>sourceCorinet.R</tt> 
+at the start of each session. 
+<h2>5. Problems, questions, bugs</h2>
+Send to info [at] corinet [dot] org
+</body>
+
+
+
+ 
+ 	

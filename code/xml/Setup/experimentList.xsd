@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.corinet.org/namespaces/CORINETSetup/List" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.corinet.org/namespaces/CORINETSetup/List" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="experimentList">
+		<xs:annotation>
+			<xs:documentation>A list of experiment setup files, executed in order of appearance in the file.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="annotation" type="annotationType" minOccurs="0"/>
+				<xs:element name="file" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Single experiment file. </xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:attribute name="location" type="xs:anyURI" use="required">
+							<xs:annotation>
+								<xs:documentation>
+									Identifier of experiment file. Either the name of a file in the local directory (not starting with '.', '/' or '\'),
+									a path relative to the CORINETROOT directory, or an absolute path. 
+								 </xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="annotationType">
+		<xs:annotation>
+			<xs:documentation>Allows to provide documentation and other information</xs:documentation>
+		</xs:annotation>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="appinfo">
+				<xs:complexType mixed="true">
+					<xs:sequence>
+						<xs:any namespace="##any" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:attribute name="source" type="xs:anyURI" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="documentation">
+				<xs:complexType mixed="true">
+					<xs:sequence>
+						<xs:any namespace="##any" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:attribute name="source" type="xs:anyURI" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+		<xs:attribute name="id" type="xs:ID" use="optional"/>
+	</xs:complexType>
+</xs:schema>

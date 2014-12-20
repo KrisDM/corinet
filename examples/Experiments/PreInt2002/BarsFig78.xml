@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<experiment xmlns="http://www.corinet.org/namespaces/CORINETSetup"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup ../../../code/xml/Setup/experimentSetup.xsd"
+definitionFile="./code/xml/Definition/languageDefinition.xml">
+	<annotation>
+		<documentation>
+			Experiment from "Pre-integration lateral inhibition enhances unsupervised learning", Neural Computation 14(9): 2157-79,2002.
+		</documentation>
+		<documentation>
+			This file generates the data for figures 7 and 8: effects of noisy task.
+		</documentation>
+		<documentation>
+			Technical issues: a single network with one block and one integrationSite. All elements are specified in situ.
+			A noiseFunction in the task element adds noise to the bars pattern at the end of the generation process.
+			Example of the usage of loops within the task element: one loop running over one parameter.
+			There are 4 configurations (4 different parameter values within the loop), and 10 runs within each
+			configuration, giving a total of 40 cycles in the execution.
+		</documentation>
+	</annotation>
+	<inputSection>
+		<inputBlock id="I0">
+			<inputRange begin="0" end="63" step="1"/>
+		</inputBlock>
+	</inputSection>
+	<networkSection>
+		<network type="discrete" inputs="64" id="N0">
+			<block id="B0" nodes="20" outputBlock="true">
+				<integrationSite  inputRefs="I0" type="conj1" id="D0">
+					<siteParams>
+						<param name="alphaStep" value="0.25"/>
+						<param name="alphaMax" value="4.0"/>
+						<param name="learningRate" value="0.25"/>
+						<param name="negLearningRate" value="0.015625"/>
+					</siteParams>
+					<initialisation type="value"/>
+					<normalisation type="normNode"/>
+				</integrationSite>
+				<outputFunction type="addSites">
+					<noiseFunction type="additive">
+						<randGen type="uniDoublePart">
+							<param name="low" value="0"/>
+							<param name="high" value="0.001"/>
+							<param name="prob" value="0.20"/>
+						</randGen>
+					</noiseFunction>
+				</outputFunction>
+			</block>
+		</network>
+	</networkSection>
+	<taskSection>
+		<task type="bars1" columns="8" rows="8" id="T0">
+			<taskParams>
+				<param name="horProb" value="0.125"/>
+				<param name="verProb" value="0.125"/>
+			</taskParams>
+			<noiseFunction type="additiveClip">
+				<randGen type="normal">
+					<param name="mean" value="0"/>
+					<loopParam name="std" values="0.3162 0.4472 0.5477 0.6325" id="P0"/>
+				</randGen>
+			</noiseFunction>
+		</task>
+	</taskSection>
+	<executionSection xsi:type="engineV1">
+		<execution networks="N0" runs="10">
+			<loop numValues="4" targets="P0"></loop>
+			<sequence>
+				<part phase="train" tasks="T0" iterations="4000" id="EP0"/>
+			</sequence>
+		</execution>
+	</executionSection>
+	<eventSection xsi:type="eventModelV1">
+		<report type="xml" location="./examples/Experiments/PreInt2002/BarsFig78Results.xml" id="R1"/>
+		<!--generating data for Figure 7-->
+		<event eventTime="afterGenerate" parts="EP0">
+			<condition variable="config" type="equals" values="3"/><!--arbitrary configuration-->
+			<condition variable="run" type="equals" values="7"/><!--arbitrary run-->
+			<condition variable="iteration" type="lt" values="48"/><!--first 48 iterations only-->
+			<record targets="T0" type="taskPatterns" report="R1"/>
+		</event>
+		<!--generating data for Figure 8-->
+		<event eventTime="endIteration" parts="EP0">
+			<condition variable="iteration" type="multiple" values="25"/>
+			<record targets="D0" type="weights" report="R1"/>
+		</event>
+	</eventSection>
+</experiment>

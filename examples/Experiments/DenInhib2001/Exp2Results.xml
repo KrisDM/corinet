@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<results xmlns="http://www.corinet.org/namespaces/CORINETResults">
+
+<execution>
+
+  <network id="N0">
+    <values id="N0" type="netInput">
+      <cycle config="0" run="0">
+        <v i="0">1       0       0       0       0       0       </v>
+        <v i="1">1       1       0       0       0       0       </v>
+        <v i="2">1       1       1       0       0       0       </v>
+        <v i="3">0       0       1       1       0       0       </v>
+        <v i="4">0       0       0       1       1       0       </v>
+        <v i="5">0       0       0       1       1       1       </v>
+        <v i="6">1       1       1       1       0       0       </v>
+        <v i="7">1       1       1       1       1       0       </v>
+        <v i="8">1       1       1       1       1       1       </v>
+        <v i="9">1       1       1       1       0       1       </v>
+        <v i="10">0       1       1       1       1       0       </v>
+        <v i="11">1       0       1       0       1       1       </v>
+      </cycle>
+    </values>
+    <values id="N0" type="netOutput">
+      <cycle config="0" run="0">
+        <v i="0">1       0       0       0       0       0       </v>
+        <v i="1">0       1       0       0       0       0       </v>
+        <v i="2">0       0       1       0       0       0       </v>
+        <v i="3">0       0       0       1       0       0       </v>
+        <v i="4">0       0       0       0       1       0       </v>
+        <v i="5">0       0       0       0       0       1       </v>
+        <v i="6">0       1       0       1       0       0       </v>
+        <v i="7">0       0       1       0       1       0       </v>
+        <v i="8">0       0       1       0       0       1       </v>
+        <v i="9">0       0       1       0       0       0.6666  </v>
+        <v i="10">0       0       0.6666  0       1       0       </v>
+        <v i="11">1       0       0       0.5     0       0.6666  </v>
+      </cycle>
+    </values>
+    <weights id="D0">
+      <cycle config="0" run="0">
+        <w i="11">
+          <n>1       0       0       0       0       0       </n>
+          <n>0.5     0.5     0       0       0       0       </n>
+          <n>0.3333  0.3333  0.3333  0       0       0       </n>
+          <n>0       0       0.5     0.5     0       0       </n>
+          <n>0       0       0       0.5     0.5     0       </n>
+          <n>0       0       0       0.3333  0.3333  0.3333  </n>
+        </w>
+      </cycle>
+    </weights>
+  </network>
+
+  <task id="T0"/>
+
+</execution>
+
+</results>
+

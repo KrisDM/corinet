@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typeDefaults xmlns="http://www.corinet.org/namespaces/CORINETSetup">
+	<default types="compInt1 conj3">
+		<siteParams>
+			<param name="alphaStep" value="0.1"/>
+			<param name="alphaMax" value="5.0"/>
+			<param name="completeIntegration" value="1.0"/>
+		</siteParams>
+	</default>
+	<default types="conj3">
+		<siteParams>
+			<param name="learningRate" value="0.5"/>
+		</siteParams>
+	</default>
+	<default types="disj1">
+		<siteParams>
+			<param name="learningRate" value="0.25"/>
+		</siteParams>
+	</default>
+	<default types="addSites modulate1">
+		<attenuation type="time1">
+			<param name="tauC" value="0.1"/>
+		</attenuation>
+	</default>
+	<default types="addSites modulate1">
+		<noiseFunction type="multiplicative">
+			<randGen type="log1">
+				<param name="high" value="0.01"/>
+			</randGen>
+		</noiseFunction>
+	</default>
+	<default numSites="1">
+		<outputFunction type="addSites"/>
+	</default>
+	<default numSites="2">
+		<outputFunction type="modulate1"/>
+	</default>
+	<default types="disj1 conj3">
+		<initialisation type="value"/>
+	</default>
+	<default types="conj3">
+		<normalisation type="normNode"/>
+	</default>
+	<default types="disj1">
+		<normalisation type="normInput"/>
+	</default>
+</typeDefaults>

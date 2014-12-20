@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE experiment [
+	<!ENTITY typeDefaults SYSTEM "typeDefaults.xml">
+]>
+<experiment xmlns="http://www.corinet.org/namespaces/CORINETSetup" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup ../../../code/xml/Setup/experimentSetup.xsd" 
+definitionFile="./code/xml/Definition/languageDefinition.xml">
+	<annotation>
+		<documentation>
+			Experiment from "Learning viewpoint invariant perceptual representation from cluttered images", 
+			IEEE Transactions on Pattern Analysis and Machine Intelligence 27(5):753-761,2005.
+		</documentation>
+		<documentation>
+			This experiment generates the data for figure 4.
+		</documentation>
+		<documentation>
+			Technical issues: 2 double layer networks, one block in each layer, no feedback.
+			Most notable in this experiment is the use of multiple loops: the top loop in each execution 
+			is the outer loop, the bottom loop in each execution is the inner loop.
+			Comments in the taskSection and executionSection specify how tasks and networks are combined
+			to generate all data for figure 4.
+			The event records the weights only at the end of each cycle.
+		</documentation>
+	</annotation>
+	<inputSection>
+		<inputBlock id="I0">
+			<inputRange begin="0" step="1" end="63"></inputRange>
+		</inputBlock>
+	</inputSection>
+	<networkSection>
+		<network type="discrete" inputs="64" id="N0"><!--using the previous pattern for learning-->
+			<block nodes="32" id="B0">
+				<integrationSite inputRefs="I0" type="conj2" id="D0"/>
+			</block>
+			<block nodes="5" id="B1" outputBlock="true">
+				<integrationSite inputRefs="B0" type="disj2" id="D1"/>
+			</block>
+		</network>
+		<network type="discrete" inputs="64" id="N1"><!--using a trace of previous patterns for learning-->
+			<block nodes="32" id="B2">
+				<integrationSite inputRefs="I0" type="conj2" id="D2"/>
+			</block>
+			<block nodes="5" id="B3" outputBlock="true">
+				<integrationSite inputRefs="B2" type="disj1" id="D3">
+					<siteParams>
+						<param name="trace" value="0.8"/>
+					</siteParams>
+				</integrationSite>
+			</block>
+		</network>
+	</networkSection>
+	<taskSection>
+		<task type="bars5" columns="8" rows="8" id="IND1">
+			<!--independent selection-->
+			<taskParams>
+				<loopParam name="numOrientations" values="2 2 4" id="OR1"/>
+				<loopParam name="probTwo" values="0 0.1 0" id="PROBTWO"/>
+				<loopParam name="probSame" values="0.4 0.5 0.6 0.7 0.8 0.9 0.95 1" id="PROB1"/>
+			</taskParams>
+		</task>
+		<task type="bars5" columns="8" rows="8" id="IND2">
+			<!--independent selection-->
+			<taskParams>
+				<loopParam name="numOrientations" values="2 4" id="OR2"/>
+				<loopParam name="probSame" values="0.4 0.5 0.6 0.7 0.8 0.9 0.95 1" id="PROB2"/>
+			</taskParams>
+		</task>
+		<task type="bars4" columns="8" rows="8" id="MUT">
+			<!--mutually exclusive selection-->
+			<taskParams>
+				<loopParam name="numOrientations" values="2 4" id="OR3"/>
+				<loopParam name="probSame" values="0.5 0.6 0.7 0.8 0.9 0.95" id="PROB3"/>
+			</taskParams>
+		</task>
+	</taskSection>
+	<executionSection xsi:type="engineV1">
+		<execution networks="N0" runs="10">
+			<!--generates the data for top row graphs in fig. 4 for the proposed algorithm-->
+			<loop numValues="3" targets="OR1 PROBTWO"/>
+			<loop numValues="8" targets="PROB1"/>
+			<sequence>
+				<part phase="train" tasks="IND1" iterations="5000" id="EP0"/>
+			</sequence>
+		</execution>
+		<execution networks="N1" runs="10">
+			<!--generates the data for top row graphs in fig 4 for the trace algorithm-->
+			<loop numValues="2" targets="OR2"/>
+			<loop numValues="8" targets="PROB2"/>
+			<sequence>
+				<part phase="train" tasks="IND2" iterations="5000" id="EP1"/>
+			</sequence>
+		</execution>
+		<execution networks="N0 N1" runs="10">
+			<!--generates the data for bottom row graphs in fig 4 for both algorithms-->
+			<loop numValues="2" targets="OR3"/>
+			<loop numValues="6" targets="PROB3"/>
+			<sequence>
+				<part phase="train" tasks="MUT" iterations="5000" id="EP2"/>
+			</sequence>
+		</execution>
+	</executionSection>
+	<defaultSection>
+	&typeDefaults;
+</defaultSection>
+	<eventSection xsi:type="eventModelV1">
+		<report type="xml" location="./examples/Experiments/Invariant2005/BarsResults.xml" id="R1"></report>
+		<event eventTime="endPart" parts="EP0 EP1 EP2">
+			<record targets="D0 D1 D2 D3" type="weights" report="R1"/>
+		</event>
+	</eventSection>
+</experiment>

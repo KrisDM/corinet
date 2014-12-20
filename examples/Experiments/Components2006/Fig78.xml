@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE experiment[
+	<!ENTITY components SYSTEM "../../PatternSets/Components2006/doubleBars.xml">
+	<!ENTITY typeDefaults SYSTEM "typeDefaults.xml">
+]>
+<experiment xmlns="http://www.corinet.org/namespaces/CORINETSetup"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup ../../../code/xml/Setup/experimentSetup.xsd"
+definitionFile="./code/xml/Definition/languageDefinition.xml">
+	<annotation>
+		<documentation>
+			Experiment from "Learning image components for object recognition", Journal of Machine Learning Research 7:793-815,2006.
+		</documentation>
+		<documentation>
+			This file generates the data for fig. 7 on page 10 and fig. 8 on page 11. Only the data for algorithms nndi and di
+			are generated; the nmf algorithms are currently not available in corinet.
+		</documentation>
+		<documentation>
+			Technical issues: a network with 32 nodes is executed in 2 configurations: once with parameter negLearningRate = 0, 
+			corresponding to algorithm 'nndi'; and once with negLearningRate = 1, corresponding to algorithm 'di'. 
+		</documentation>
+	</annotation>
+	<inputSection>
+		<inputBlock id="I0">
+			<inputRange begin="0" end="80" step="1"/>
+		</inputBlock>
+	</inputSection>
+	<networkSection>
+		<network type="discrete" inputs="81" id="N32">
+			<block id="B32" nodes="32" outputBlock="true">
+				<integrationSite type="conj2" inputRefs="I0" id="D32">
+					<siteParams>
+						<loopParam name="negLearningRate" values="0 1" id="P32"/>
+					</siteParams>
+					<initialisation type="random">
+						<randGen type="normal">
+							<param name="mean" value="0.012345"/>
+							<param name="std" value="0.000395"/>
+						</randGen>
+					</initialisation>
+				</integrationSite>
+			</block>
+		</network>
+	</networkSection>
+	<taskSection>
+		<task type="set3" columns="9" rows="9" store="400" id="T400">
+			<taskParams>
+				<param name="prob" value="0.125"/>
+			</taskParams>
+			&components;
+		</task>
+	</taskSection>
+	<executionSection xsi:type="engineV1">
+		<execution networks="N32" runs="25">
+			<loop targets="P32" numValues="2"/>
+			<sequence>
+				<part phase="generate" random="true" tasks="T400" iterations="400" id="G400"/><!--generate 400 patterns-->
+				<part phase="train" random="false" tasks="T400" iterations="10000" id="EP400"/><!--train with these 400 patterns-->
+			</sequence>
+		</execution>
+	</executionSection>
+	<defaultSection>
+		&typeDefaults;
+	</defaultSection>
+	<eventSection xsi:type="eventModelV1">
+		<report type="xml" location="./examples/Experiments/Components2006/Fig78Results.xml" id="R1"/>
+		<event eventTime="endPart" parts="EP400">
+			<record targets="D32" type="weights" report="R1"/>
+		</event>
+	</eventSection>
+</experiment>

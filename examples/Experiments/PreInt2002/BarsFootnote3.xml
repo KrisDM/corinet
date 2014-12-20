@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<experiment xmlns="http://www.corinet.org/namespaces/CORINETSetup"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup ../../../code/xml/Setup/experimentSetup.xsd"
+definitionFile="./code/xml/Definition/languageDefinition.xml">
+	<annotation>
+		<documentation>
+			Experiment from "Pre-integration lateral inhibition enhances unsupervised learning", Neural Computation 14(9): 2157-79,2002.
+		</documentation>
+		<documentation>
+			This file generates the data of footnote 3 on page 7: effects of different task types.
+		</documentation>
+		<documentation>
+			Technical issues: single network simulated for multiple runs. All elements are specified in situ.
+		</documentation>
+	</annotation>
+	<inputSection>
+		<inputBlock id="I0">
+			<inputRange begin="0" end="63" step="1"/>
+		</inputBlock>
+	</inputSection>
+	<networkSection>
+		<network type="discrete" inputs="64" id="N0">
+			<block id="B0" nodes="16" outputBlock="true">
+				<integrationSite inputRefs="I0" type="conj1" id="D0">
+					<siteParams>
+						<param name="alphaStep" value="0.25"/>
+						<param name="alphaMax" value="4.0"/>
+						<param name="learningRate" value="1"/>
+						<param name="negLearningRate" value="0.015625"/>
+					</siteParams>
+					<initialisation type="value"/>
+					<normalisation type="normNode"/>
+				</integrationSite>
+				<outputFunction type="addSites">
+					<noiseFunction type="additive">
+						<randGen type="uniDoublePart">
+							<param name="low" value="0"/>
+							<param name="high" value="0.001"/>
+							<param name="prob" value="0.25"/>
+						</randGen>
+					</noiseFunction>
+				</outputFunction>
+			</block>
+		</network>
+	</networkSection>
+	<taskSection>
+		<task type="bars2" id="T0" columns="8" rows="8">
+			<taskParams>
+				<param name="horProb" value="0.125"/>
+				<param name="verProb" value="0.125"/>
+			</taskParams>
+		</task>
+	</taskSection>
+	<executionSection xsi:type="engineV1">
+		<execution networks="N0" runs="25">
+			<sequence>
+				<part phase="train" tasks="T0" iterations="500" id="EP0"/>
+			</sequence>
+		</execution>
+	</executionSection>
+	<eventSection xsi:type="eventModelV1">
+		<report type="xml" location="./examples/Experiments/PreInt2002/BarsFootnote3Results.xml" id="R1"/>
+		<event eventTime="endIteration" parts="EP0">
+			<condition variable="iteration" type="multiple" values="5"/>
+			<record targets="D0" type="weights" report="R1"/>
+		</event>
+	</eventSection>
+</experiment>

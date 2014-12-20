@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageDefinition xmlns="http://www.corinet.org/namespaces/CORINETDefinition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETDefinition ./../../code/xml/Definition/languageDefinition.xsd"
+codeFile="./code/xml/Definition/codeGenerator.xml" location="./examples/SandBoxFiles/TestCode">
+	<randGenSection>
+	</randGenSection>
+	<attenuationSection>
+	</attenuationSection>
+	<noiseFunctionSection>
+	</noiseFunctionSection>
+	<initialisationSection>
+	</initialisationSection>
+	<normalisationSection>
+	</normalisationSection>
+	<outputFunctionSection>
+	</outputFunctionSection>
+	<locationSection>
+	</locationSection>
+	<integrationSiteSection>
+		<integrationSite type="intTest1">
+			<param name="maxSteps" use="required"/>
+		</integrationSite>
+	</integrationSiteSection>
+	<blockSection>
+	</blockSection>
+	<networkSection>
+	</networkSection>
+	<dataSourceSection>
+	</dataSourceSection>
+	<insertSection>
+		<insert type="insertTest1">
+		</insert>
+	</insertSection>
+	<taskSection>
+	</taskSection>
+	<compositeTaskSection>
+		<compositeTask type="ctTest1">
+			<param name="testParam" use="required"/>
+		</compositeTask>
+	</compositeTaskSection>
+	<executionSection>
+	</executionSection>
+</languageDefinition>

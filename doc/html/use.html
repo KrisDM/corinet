@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Running CORINET</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+<body>
+<h1>Running corinet</h1>
+<h2>1. Running corinet from the command line</h2>
+<h3>Usage</h3>
+At the command prompt, type:<br/>
+<tt>corinet -?|-t</tt><br/>
+<tt>corinet [-v|-q]</tt> <i>fileName</i><br/>
+
+<h3>Flags</h3>
+<ul>
+	<li><tt>-?</tt>	produces a help message</li>
+	<li><tt>-t</tt>	test known compatibility issues; currently it tests the 32-bit random number generator</li>
+	<li><tt>-v</tt>	check <i>fileName</i> for errors only; do not run the experiment or generate code</li>
+	<li><tt>-q</tt>	run in quiet mode, without progress indicator</li>
+</ul>
+
+<h3>Argument <i>fileName</i></h3> 
+An <tt>xml </tt>file in <a href="./corinetmarkuplanguage.html"><tt>corinet</tt> markup language</a> 
+format. Either: 
+<ul>
+	<li>
+		a file in the current working directory, not starting with '.', '\' or '/'<br/>
+    <tt>corinet Exp1.xml</tt><br/>
+	</li>
+	<li>
+		a file relative to <tt>CORINETROOT</tt>, starting with '.' or '..'<br/>
+    <tt>corinet ./work/test/Exp1.xml</tt><br/>
+	</li>
+	<li>
+		a file specified by a fully qualified path<br/>
+    <tt>corinet C:\corinet\work\test\Exp1.xml</tt> (on Windows)<br/>
+    <tt>corinet /home/corinet/work/test/Exp1.xml</tt> (on Linux)<br/>
+	</li>	
+</ul>
+
+<h3>Program output</h3>
+<ul>
+	<li>
+		A progress indicator shows the progress of the experiment. This can be
+		supressed by using flag '-q' to run <tt>CORINET</tt> in quiet mode. In that case, 
+		only error messages will be displayed.
+	</li>
+	<li>
+		Results are written in either plain text or xml file format. The type of file,
+		where it is written and what is being written is specified in the experiment setup file.
+	</li>
+</ul>
+
+<h3>Troubleshooting</h3>
+<ul>
+	
+  <li> <tt>$CORINETROOT/bin</tt> should be in the search path. </li>
+	
+  <li> When the xml input file contains an error, an error message detailing the 
+    type and location of the error is printed out and the program is aborted. 
+  </li>
+	
+  <li> If <tt>corinet</tt> does not produce a detailed error message because of 
+    an unforeseen error, or crashes during execution, please send the offending.xml 
+    file to info [at] corinet [dot] org. </li>
+</ul>
+
+<h2>2. Running corinet from Matlab</h2>
+<h3>Usage</h3>
+At the <tt>Matlab</tt> command prompt or in an .m file use:<br/>
+<tt>corinet fileName;</tt><br/>
+<tt>corinet(fileName,flag);</tt><br/>
+<i>fileName</i> is a file in the current working directory only.<br/>
+<h3>Help</h3>
+For more help on the available <tt>Matlab</tt> functions, see the files in <tt>$CORINETROOT/code/matlab</tt>. 
+<h3>Troubleshooting</h3>
+<ul>
+	
+  <li> <tt>$CORINETROOT/code/matlab</tt> should be in the <tt>Matlab</tt> path. 
+  </li>
+	
+  <li> The progress indicator writes one line per cycle to the <tt>Matlab</tt> 
+    command prompt. This can be surpressed by using flag '-q' to run <tt>corinet</tt> 
+    in quiet mode. </li>
+</ul>
+
+<h2>3. Running corinet from R</h2>
+<h3>Usage</h3>
+At the R command prompt or in an .r file use:<br/>
+<tt>corinet fileName;</tt><br/>
+<i>fileName</i> is a file in the local directory only. Flags are not allowed.<br/>
+<h3>Help</h3>
+For more help on the available <tt>R</tt> functions, see the files in <tt>$CORINETROOT/code/r</tt>. 
+<h3>Troubleshooting</h3>
+<ul>
+  <li> Source <tt>$CORINETROOT/code/r/sourceCorinet.R</tt> at the start of your 
+    session. </li>
+  <li> The progress indicator does not write to the R prompt until the end of 
+    the experiment.</li>
+</ul>
+</body>
+
+	
+

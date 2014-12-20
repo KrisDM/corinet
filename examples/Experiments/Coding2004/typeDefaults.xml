@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typeDefaults xmlns="http://www.corinet.org/namespaces/CORINETSetup" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.corinet.org/namespaces/CORINETSetup ../../../code/xml/Setup/experimentSetup.xsd">
+	<default types="conj2">
+		<initialisation type="one"/>
+	</default>
+	<default types="conj2">
+		<normalisation type="constrainNode"/>
+	</default>
+	<default types="conj2">
+		<siteParams>
+			<param name="alphaStep" value="0.25"/>
+			<param name="alphaMax" value="6"/>
+		</siteParams>
+	</default>
+	<default types="conj2">
+		<siteParams>
+			<param name="learningRate" value="1"/>
+			<param name="negLearningRate" value="1"/>
+		</siteParams>
+	</default>
+	<default numSites="1">
+		<outputFunction type="sis">
+			<noiseFunction type="mult">
+				<randGen type="exp1">
+					<param name="mean" value="0.001"/>
+				</randGen>
+			</noiseFunction>
+		</outputFunction>
+	</default>
+</typeDefaults>
